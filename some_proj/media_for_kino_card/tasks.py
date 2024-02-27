@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import boto3
 import ffmpeg
 from botocore.exceptions import ClientError
@@ -7,10 +5,7 @@ from botocore.exceptions import NoCredentialsError
 from celery import shared_task
 from django.conf import settings
 
-
-def ensure_directory_exists(directory_path):
-    if not Path.exists(directory_path):
-        Path.mkdir(directory_path)
+from some_proj.media_for_kino_card.utils.check_or_create_local_package import check_or_create_package
 
 
 @shared_task
@@ -36,11 +31,22 @@ def download_file_from_s3(file_url, file_name, quality=None):
 
 
 @shared_task
-def recoding_files(orig_file_path, file_name, quality):
+def get_video_stream(filepath):
+    probe = ffmpeg.probe(filepath)
+    video_streams = [stream for stream in probe["streams"] if stream["codec_type"] == "video"]
+    video_stream = video_streams[0] if video_streams else None
+    if video_stream is None:
+        error_message = "Не удалось найти видеопоток в файле."
+        raise ValueError(error_message)
+    return video_stream["width"], video_stream["height"]
+
+
+@shared_task
+def recoding_files(orig_file_path, file_name, quality, correlation):
     input_file = orig_file_path
     output_folder = file_name
     # проверка на существующую папку
-    ensure_directory_exists(output_folder)
+    check_or_create_package(output_folder)
 
     quality_params = {
         "360": {"resolution": "640x360", "video_bitrate": "1000k", "audio_bitrate": "128k"},
@@ -53,7 +59,7 @@ def recoding_files(orig_file_path, file_name, quality):
         error_message = "Некорректное значение параметра 'quality'"
         raise ValueError(error_message)
     resolution = quality_params["resolution"].split("x")
-    vf_filter = f"scale={resolution[0]}:{resolution[1]}"
+    vf_filter = f"scale={int(resolution[0]) * correlation}:{int(resolution[1])}"
     output_file = f"{output_folder}/{quality}.mp4"
     command = (
         ffmpeg.input(input_file)
