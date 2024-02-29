@@ -29,17 +29,19 @@ class MediaFile(models.Model):
         verbose_name="Выбор эпизода фильма",
         max_length=255,
     )
-    orig_file = models.URLField(
-        verbose_name="Ссылка на S3",
+    orig_path_file = models.CharField(
+        max_length=300,
+        verbose_name="Ссылка на исходный локальный файл / S3",
     )
     data_added = models.DateTimeField(
         auto_now_add=True,
         verbose_name="Дата загрузки",
     )
     urls = models.ManyToManyField(
-        "UrlsAmazonInMedia",
-        verbose_name="Ссылки на файл в Amazon",
+        "UrlsInMedia",
+        verbose_name="Ссылки на видеофайлы",
         related_name="media_urls",
+        blank=True,
     )
     history = HistoricalRecords()
 
@@ -48,10 +50,10 @@ class MediaFile(models.Model):
         verbose_name_plural = "Медии"
 
     def __str__(self):
-        return f"{self.content_type.name}"
+        return f"{self.content_object.name}"
 
 
-class UrlsAmazonInMedia(models.Model):
+class UrlsInMedia(models.Model):
     media = models.ForeignKey(
         MediaFile,
         verbose_name="Медиа",
@@ -61,6 +63,11 @@ class UrlsAmazonInMedia(models.Model):
         Quality,
         verbose_name="качество",
         on_delete=models.CASCADE,
+    )
+    url = models.CharField(
+        verbose_name="ссылка",
+        max_length=300,
+        default="",
     )
 
     class Meta:

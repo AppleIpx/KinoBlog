@@ -116,6 +116,10 @@ class BaseModel(models.Model):
         GenreModel,
         verbose_name="Жанры",
     )
+    actors = models.ManyToManyField(
+        ActorModel,
+        verbose_name="Актеры",
+    )
     reaction = models.ManyToManyField(
         ReactionModel,
         verbose_name="Лайк/Дизлайк",
