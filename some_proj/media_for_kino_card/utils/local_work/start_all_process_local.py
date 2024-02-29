@@ -3,8 +3,8 @@ import logging
 from some_proj.films.models import FilmModel
 from some_proj.media_for_kino_card.models import Quality
 from some_proj.media_for_kino_card.tasks import create_add_local_links
-from some_proj.media_for_kino_card.utils.work_with_s3.defining_the_resolution import start_process_get_correlation
-from some_proj.media_for_kino_card.utils.work_with_s3.recoding_files import recoding
+from some_proj.media_for_kino_card.tasks import get_video_stream
+from some_proj.media_for_kino_card.tasks import recoding_files
 
 
 def start_process_media_files_local(instance):
@@ -12,15 +12,14 @@ def start_process_media_files_local(instance):
     qualities = Quality.objects.all()
     film = FilmModel.objects.get(pk=instance.object_id)
     # Определение соотношения разрешения оригинального фильма
-    correlation = start_process_get_correlation(
+    correlation = get_video_stream(
         orig_file_path,
     )
     logging.info("Соотношение определено")
     # Кодирование видео
-    recording_files_paths = recoding(
-        film.name,
+    recording_files_paths = recoding_files(
         orig_file_path,
-        qualities,
+        film.name,
         correlation,
     )
     logging.info("Кодирование прошло успешно")
