@@ -147,7 +147,7 @@ ignore = [
   "RUF012", # Mutable class attributes should be annotated with `typing.ClassVar`
   "SIM102", # sometimes it's better to nest
   "RUF003", # Comment contains ambiguous `с`
-    "RUF001",
+  "RUF001", # Comment contains ambiguous `H`, `e`
 ]
 # Allow fix for all enabled rules (when `--fix`) is provided.
 fixable = ["ALL"]

@@ -6,5 +6,5 @@ def get_correlation(width, height):
 
 
 def start_process_get_correlation(filepath):
-    width, height = get_video_stream.delay(filepath)
+    width, height = get_video_stream(filepath)
     return get_correlation(width, height)

@@ -10,9 +10,9 @@
             <option value="celerybeat"/>
           </list>
         </option>
-        <option name="sourceFilePath" value="local.yml"/>
+        <option name="sourceFilePath" value="local.yml" />
       </settings>
     </deployment>
-    <method v="2"/>
+    <method v="2" />
   </configuration>
 </component>

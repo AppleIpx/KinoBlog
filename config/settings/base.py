@@ -346,3 +346,10 @@ SPECTACULAR_SETTINGS = {
 }
 # Your stuff...
 # ------------------------------------------------------------------------------
+
+
+# s3
+# ------------------------------------------------------------------------------
+DJANGO_AWS_ACCESS_KEY_ID = env.get_value("DJANGO_AWS_ACCESS_KEY_ID", default=None)
+DJANGO_AWS_SECRET_ACCESS_KEY = env.get_value("DJANGO_AWS_SECRET_ACCESS_KEY", default=None)
+DJANGO_AWS_STORAGE_BUCKET_NAME = env.str("DJANGO_AWS_STORAGE_BUCKET_NAME", default=None)

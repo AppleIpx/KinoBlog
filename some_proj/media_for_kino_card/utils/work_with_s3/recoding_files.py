@@ -1,12 +1,12 @@
 from some_proj.media_for_kino_card.tasks import recoding_files
 
 
-def recoding(instance, orig_local_path, qualities, correlation):
+def recoding(film_name, orig_file_path, qualities, correlation):
     # Перекодирование исходного файла в 4 качества
     return [
-        recoding_files.delay(
-            orig_local_path,
-            instance.film.name,
+        recoding_files(
+            orig_file_path,
+            film_name,
             quality.name,
             correlation,
         )
