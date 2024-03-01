@@ -6,6 +6,7 @@ from celery import shared_task
 from django.conf import settings
 
 from some_proj.media_for_kino_card.models import MediaFile
+from some_proj.media_for_kino_card.models import Quality
 from some_proj.media_for_kino_card.models import UrlsInMedia
 from some_proj.media_for_kino_card.utils.shared_files.check_or_create_local_package import check_or_create_package
 
@@ -38,51 +39,58 @@ def get_video_stream(filepath):
     video_stream = next((stream for stream in probe["streams"] if stream["codec_type"] == "video"), None)
     width = int(video_stream["width"])
     height = int(video_stream["height"])
-    return width, height
+    return width / height
 
 
 @shared_task
-def recoding_files(orig_file_path, file_name, quality, correlation):
-    input_file = orig_file_path
-    output_folder = f"media/{file_name}"
-    # проверка на существующую папку
-    check_or_create_package(output_folder)
-    quality_params = {
-        "360": {
-            "video_bitrate": "1000k",
-            "audio_bitrate": "128k",
-        },
-        "480": {
-            "video_bitrate": "1800k",
-            "audio_bitrate": "162k",
-        },
-        "720": {
-            "video_bitrate": "3500k",
-            "audio_bitrate": "220k",
-        },
-        "1080": {
-            "video_bitrate": "8000k",
-            "audio_bitrate": "256k",
-        },
-    }
-    width = round(int(quality) * correlation)
-    height = int(quality)
-    # проверка на четность и нечетность ширины
-    if width % 2 != 0:
-        width += 1
-    vf_filter = f"scale={width}:{height}, fps=23.976"
-    output_file = f"{output_folder}/{quality}.mp4"
-    command = (
-        ffmpeg.input(input_file)
-        .output(
-            output_file,
-            vf=vf_filter,
-            **{"b:v": quality_params[quality]["video_bitrate"], "b:a": quality_params[quality]["audio_bitrate"]},
+def recoding_files(orig_file_path, file_name, correlation):
+    qualities = Quality.objects.all()
+    output_files = []
+    for quality in qualities:
+        current_quality = quality.name
+        output_folder = f"media/{file_name}"
+        # проверка на существующую папку
+        check_or_create_package(output_folder)
+        quality_params = {
+            "360": {
+                "video_bitrate": "1000k",
+                "audio_bitrate": "128k",
+            },
+            "480": {
+                "video_bitrate": "1800k",
+                "audio_bitrate": "162k",
+            },
+            "720": {
+                "video_bitrate": "3500k",
+                "audio_bitrate": "220k",
+            },
+            "1080": {
+                "video_bitrate": "8000k",
+                "audio_bitrate": "256k",
+            },
+        }
+        width = round(int(current_quality) * correlation)
+        height = int(current_quality)
+        # проверка на четность и нечетность ширины
+        if width % 2 != 0:
+            width += 1
+        vf_filter = f"scale={width}:{height}, fps=23.976"
+        output_file = f"{output_folder}/{current_quality}.mp4"
+        command = (
+            ffmpeg.input(orig_file_path)
+            .output(
+                output_file,
+                vf=vf_filter,
+                **{
+                    "b:v": quality_params[current_quality]["video_bitrate"],
+                    "b:a": quality_params[current_quality]["audio_bitrate"],
+                },
+            )
+            .overwrite_output()
         )
-        .overwrite_output()
-    )
-    command.run()
-    return output_file
+        command.run()
+        output_files.append(output_file)
+    return output_files
 
 
 @shared_task
