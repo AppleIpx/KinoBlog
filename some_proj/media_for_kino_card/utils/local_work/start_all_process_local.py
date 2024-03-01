@@ -16,17 +16,19 @@ def start_process_media_files_local(instance):
         orig_file_path,
     )
     logging.info("Соотношение определено")
-    # Кодирование видео
-    recording_files_paths = recoding_files(
-        orig_file_path,
-        film.name,
-        correlation,
-    )
-    logging.info("Кодирование прошло успешно")
-    # Создание и добавление в таблицу локальных ссылок видео-файлов
-    create_add_local_links(
-        instance,
-        qualities,
-        recording_files_paths,
-    )
-    logging.info("Локальные ссылки успешно созданы")
+    for quality in qualities:
+        # Кодирование видео
+        recording_file_path = recoding_files(
+            orig_file_path,
+            film.name,
+            quality.name,
+            correlation,
+        )
+        logging.info("Кодирование прошло успешно")
+        # Создание и добавление в таблицу локальных ссылок видео-файлов
+        create_add_local_links(
+            instance,
+            quality,
+            recording_file_path,
+        )
+        logging.info("Локальные ссылки успешно созданы")
