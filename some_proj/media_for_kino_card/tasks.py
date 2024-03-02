@@ -6,6 +6,7 @@ from celery import shared_task
 from django.conf import settings
 
 from some_proj.media_for_kino_card.models import MediaFile
+from some_proj.media_for_kino_card.models import Quality
 from some_proj.media_for_kino_card.models import UrlsInMedia
 from some_proj.media_for_kino_card.utils.shared_files.check_or_create_local_package import check_or_create_package
 
@@ -102,8 +103,10 @@ def create_add_links_for_amazon(instance, qualities, recording_files_paths):
 
 
 @shared_task
-def create_add_local_links(instance, quality, recording_file_path):
+def create_add_local_links(instance_id, quality_id, recording_file_path):
     # создание локальных ссылкок для каждого качества
+    instance = MediaFile.objects.get(pk=instance_id)
+    quality = Quality.objects.get(pk=quality_id)
     local_url = recording_file_path
     # занесение данных в UrlsInMedia
     UrlsInMedia.objects.create(
