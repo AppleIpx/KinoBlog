@@ -89,6 +89,7 @@ LOCAL_APPS = [
     "some_proj.films",
     "some_proj.comments",
     "some_proj.media_for_kino_card",
+    "some_proj.serials",
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

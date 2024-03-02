@@ -1,16 +1,17 @@
 import logging
 
-from some_proj.films.models import FilmModel
 from some_proj.media_for_kino_card.models import Quality
-from some_proj.media_for_kino_card.tasks import create_add_local_links
 from some_proj.media_for_kino_card.tasks import get_video_stream
 from some_proj.media_for_kino_card.tasks import recoding_files
+from some_proj.media_for_kino_card.utils.shared_files.check_instance import check_instace_for_film_serial
+from some_proj.media_for_kino_card.utils.shared_files.create_urls import create_add_links
 
 
 def start_process_media_files_local(instance):
     orig_file_path = instance.orig_path_file
     qualities = Quality.objects.all()
-    film = FilmModel.objects.get(pk=instance.object_id)
+
+    content_name = check_instace_for_film_serial(instance)
 
     # Определение соотношения разрешения оригинального фильма
     correlation = get_video_stream.delay(
@@ -22,7 +23,7 @@ def start_process_media_files_local(instance):
         # Кодирование видео
         recording_file_path = recoding_files.delay(
             orig_file_path,
-            film.name,
+            content_name,
             quality.name,
             correlation_value,
         )
@@ -31,11 +32,9 @@ def start_process_media_files_local(instance):
         logging.info(success_msg_recording)
 
         # Создание и добавление в таблицу локальных ссылок видео-файлов
-        instance_id = instance.object_id
-        quality_id = quality.pk
-        create_add_local_links.delay(
-            instance_id,
-            quality_id,
+        create_add_links(
+            instance,
+            quality,
             recording_file_value,
         )
         success_msg_create_link = f"Локальные ссылка для качества {quality.name} успешно создана"

@@ -11,18 +11,22 @@ def start_signal_processes(instance):
     try:
         # получение предыдущего экземпляра медии
         previous_version = instance.history.first()
+
         # проверка на изменение исходного пути
         if check_change_urls(previous_version, instance):
             info_message = "Ссылка на исходных файл была изменена"
             logging.info(info_message)
+
             # проверка на имеющиеся переменные для S3
             if check_env_files():
                 logging.info("Переменные для подключения к S3 обнаружены")
+
                 # запуск всех процессов с S3
                 start_process_media_files_s3(previous_version)
             else:
                 warning_message = "Необходимо установить переменные окружения для подключения к S3."
                 logging.warning(warning_message)
+
                 # запуск всех процессов локально
                 start_process_media_files_local(instance)
         logging.info("Ссылка не изменена, кодирование не требуется")
