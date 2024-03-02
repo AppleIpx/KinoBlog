@@ -4,17 +4,9 @@ from django.db.models.signals import pre_save
 from django.dispatch import receiver
 
 from some_proj.films.models import FilmModel
-from some_proj.films.models import SerialModel
 from some_proj.media_for_kino_card.models import MediaFile
 from some_proj.media_for_kino_card.utils.executing_processes_in_signal import start_signal_processes
-
-# Логика такая, что вначале создает карточка фильма
-# или сериала, перехватывается сигналом, создается Медия
-# со ссылкой на модель, которая только, что была
-# создана => медия знает про связь фильма/сериала. После
-# обновления Медии (ссылкой на S3) можно запускать процесс
-# скачивания файла, кодировки и тп. Это нужно было для
-# получения данных о фильме или сериале
+from some_proj.serials.models import SerialModel
 
 
 @receiver(post_save, sender=SerialModel)

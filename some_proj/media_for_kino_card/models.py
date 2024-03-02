@@ -50,7 +50,11 @@ class MediaFile(models.Model):
         verbose_name_plural = "Медии"
 
     def __str__(self):
-        return f"{self.content_object.name}"
+        return (
+            f"{self.content_object.name} {self.content_object.season} сезон {self.episode} серия"
+            if hasattr(self.content_object, "season")
+            else self.content_object.name
+        )
 
 
 class UrlsInMedia(models.Model):
