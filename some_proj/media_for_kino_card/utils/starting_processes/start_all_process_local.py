@@ -11,6 +11,7 @@ def start_process_media_files_local(instance):
     orig_file_path = instance.orig_path_file
     qualities = Quality.objects.all()
 
+    # определние объекта: Фильм или Сериал
     content_name = check_instace_for_film_serial(instance)
 
     # Определение соотношения разрешения оригинального фильма

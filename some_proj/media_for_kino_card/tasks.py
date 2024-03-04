@@ -1,7 +1,8 @@
+import logging
+
 import boto3
 import ffmpeg
 from botocore.exceptions import ClientError
-from botocore.exceptions import NoCredentialsError
 from celery import shared_task
 from django.conf import settings
 
@@ -11,25 +12,21 @@ from some_proj.media_for_kino_card.utils.shared_files.check_or_create_local_pack
 
 
 @shared_task
-def download_file_from_s3(file_url, file_name, quality=None):
-    logger = settings.logging.getLogger("some_proj")
-    s3 = boto3.client(
-        "s3",
-        region_name="eu-central-1",
-    )
-    bucket_name = "my-bucket"
-    file_name_to_save = f"media/{file_name}/{quality}" if quality else f"media/{file_name}"
+def download_file_from_s3(s3_path_to_file, content_name):
+    s3 = boto3.client("s3")
+    bucket_name = settings.DJANGO_AWS_STORAGE_BUCKET_NAME
+    orig_file_local_path = f"media_s3/{content_name}"
     try:
-        s3.download_file(bucket_name, file_url, file_name_to_save)
-        logger.info(
-            "Файл %s был успешно скачан и сохранен в %s.",
-            file_url,
-            file_name_to_save,
-        )
+        s3.download_file(bucket_name, s3_path_to_file, orig_file_local_path)
+        download_message = f"Файл {content_name} был успешно скачан и сохранен в {orig_file_local_path}."
+        logging.info(download_message)
     except ClientError:
-        logger.exception("Ошибка при скачивании файла:")
+        exception_message = "Ошибка при скачивании файла"
+        logging.exception(exception_message)
     else:
-        return file_name_to_save
+        success_message = "Скачивание файла прошло успешно"
+        logging.info(success_message)
+        return orig_file_local_path
 
 
 @shared_task
@@ -42,8 +39,8 @@ def get_video_stream(filepath):
 
 
 @shared_task
-def recoding_files(orig_file_path, file_name, quality, correlation):
-    output_folder = f"media/{file_name}"
+def recoding_files(orig_file_path, content_name, quality, correlation):
+    output_folder = f"media/{content_name}"
     # проверка на существующую папку
     check_or_create_package(output_folder)
     quality_params = {
@@ -102,18 +99,15 @@ def create_add_links_for_amazon(instance, qualities, recording_files_paths):
 
 
 @shared_task
-def upload_to_s3(file_path, file_name):
+def upload_to_s3(recording_file_value):
     s3 = boto3.client("s3")
-    logger = settings.logging.getLogger("some_proj")
-    bucket_name = "my-bucket"
+    local_path = recording_file_value
+    path_s3 = recording_file_value
+    bucket_name = settings.DJANGO_AWS_STORAGE_BUCKET_NAME
     try:
-        s3.upload_file(file_path, bucket_name, file_name)
+        s3.upload_file(local_path, bucket_name, path_s3)
     except FileNotFoundError:
-        logger.info("Файл не найден: %s", file_path)
-        return False
-    except NoCredentialsError:
-        logger.info("AWS credentials не найдены.")
-        return False
+        message_file_not_found = f"Файл {recording_file_value}не найден"
+        logging.info(message_file_not_found)
     else:
-        logger.info("Файл успешно загружен на S3")
-        return True
+        logging.info("Файл успешно загружен на S3")
