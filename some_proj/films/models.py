@@ -94,6 +94,10 @@ class BaseModel(models.Model):
         verbose_name="Название",
         max_length=226,
     )
+    poster = models.ImageField(
+        verbose_name="Постер",
+        blank=True,
+    )
     trailer = models.CharField(
         verbose_name="Ссылка на трейлер из youtube",
         max_length=500,
@@ -144,8 +148,27 @@ class FilmModel(BaseModel):
     )
 
     class Meta:
-        verbose_name = "Фильм"
-        verbose_name_plural = "Фильмы"
+        verbose_name = "фильм"
+        verbose_name_plural = "фильмы"
 
     def __str__(self):
         return self.name
+
+
+class PhotoFilm(models.Model):
+    film = models.ForeignKey(
+        FilmModel,
+        verbose_name="фильм",
+        on_delete=models.CASCADE,
+    )
+    photo_film = models.ImageField(
+        upload_to=f"media/photos_films/{film.name}",
+        verbose_name="Кадр из фильма",
+    )
+
+    class Meta:
+        verbose_name = "кадр в фильме"
+        verbose_name_plural = "кадры из фильмов"
+
+    def __str__(self):
+        return f"кадр из {self.film.name}"
