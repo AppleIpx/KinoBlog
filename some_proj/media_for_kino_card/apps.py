@@ -6,4 +6,4 @@ class MediaForKinoCardConfig(AppConfig):
     name = "some_proj.media_for_kino_card"
 
     def ready(self):
-        pass
+        import some_proj.media_for_kino_card.signals  # noqa: F401

@@ -5,8 +5,8 @@ from some_proj.media_for_kino_card.tasks import download_file_from_s3
 from some_proj.media_for_kino_card.tasks import get_video_stream
 from some_proj.media_for_kino_card.tasks import recoding_files
 from some_proj.media_for_kino_card.tasks import upload_to_s3
-from some_proj.media_for_kino_card.utils.shared_files.check_instance import check_instace_for_film_serial
-from some_proj.media_for_kino_card.utils.shared_files.create_urls import create_add_links
+from some_proj.media_for_kino_card.utils.shared_files import check_instance
+from some_proj.media_for_kino_card.utils.shared_files import create_add_links
 
 
 # запуск всех процессов
@@ -15,7 +15,7 @@ def start_process_media_files_s3(instance):
     qualities = Quality.objects.all()
 
     # определение объекта: Фильм или Сериал
-    content_name = check_instace_for_film_serial(instance)
+    content_name = check_instance(instance)
     object_message = "Объект определен"
     logging.info(object_message)
 
