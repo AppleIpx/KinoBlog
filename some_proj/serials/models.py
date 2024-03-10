@@ -1,9 +1,12 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 
-from some_proj.films.models import BaseModel
+from some_proj.films.models import BaseContentModel
+
+User = get_user_model()
 
 
-class SerialModel(BaseModel):
+class SerialModel(BaseContentModel):
     season = models.PositiveIntegerField(
         verbose_name="Сезон",
     )
@@ -13,10 +16,13 @@ class SerialModel(BaseModel):
     release_date = models.DateField(
         verbose_name="Дата выхода сериала",
     )
+    duration = models.IntegerField(
+        verbose_name="длительность серии",
+    )
 
     class Meta:
-        verbose_name = "Сериал"
-        verbose_name_plural = "Сериалы"
+        verbose_name = "сериал"
+        verbose_name_plural = "сериалы"
 
     def __str__(self):
         return f"{self.name} {self.season} сезон"
