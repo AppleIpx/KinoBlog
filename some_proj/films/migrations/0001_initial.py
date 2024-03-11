@@ -49,7 +49,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='ProducerModel',
+            name='ProducerModelBase',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=200, verbose_name='Имя')),
@@ -75,7 +75,7 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='FilmModel',
+            name='FilmContentModel',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=226, verbose_name='Название')),

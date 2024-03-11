@@ -15,11 +15,11 @@ class CommentModel(models.Model):
     content_object = GenericForeignKey("content_type", "object_id")
     user = models.ForeignKey(
         User,
-        verbose_name="пользователь",
+        verbose_name="Пользователь",
         on_delete=models.CASCADE,
     )
     text = models.TextField(
-        verbose_name="комментарий",
+        verbose_name="Комментарий",
     )
     created_at = models.DateTimeField(
         verbose_name="Дата создания комментария",
