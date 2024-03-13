@@ -6,13 +6,14 @@ from simple_history.models import HistoricalRecords
 
 class Quality(models.Model):
     name = models.CharField(
+        verbose_name="Качество",
         max_length=255,
         unique=True,
     )
 
     class Meta:
-        verbose_name = "Качество"
-        verbose_name_plural = "Качества"
+        verbose_name = "качество"
+        verbose_name_plural = "качества"
 
     def __str__(self):
         return self.name
@@ -46,8 +47,8 @@ class MediaFile(models.Model):
     history = HistoricalRecords()
 
     class Meta:
-        verbose_name = "Медия"
-        verbose_name_plural = "Медии"
+        verbose_name = "медия"
+        verbose_name_plural = "медии"
 
     def __str__(self):
         return (
@@ -65,18 +66,18 @@ class UrlsInMedia(models.Model):
     )
     quality = models.ForeignKey(
         Quality,
-        verbose_name="качество",
+        verbose_name="Качество",
         on_delete=models.CASCADE,
     )
     url = models.CharField(
-        verbose_name="ссылка",
+        verbose_name="Ссылка",
         max_length=300,
         default="",
     )
 
     class Meta:
-        verbose_name = "Ссылка на амазон"
-        verbose_name_plural = "Ссылки на амазон"
+        verbose_name = "ссылка на локальный файл/амазон"
+        verbose_name_plural = "ссылки на локальные файлы/амазон"
 
     def __str__(self):
         return f"{self.media} - {self.quality}"
