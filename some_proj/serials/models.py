@@ -17,7 +17,7 @@ class SerialModel(BaseContentModel):
         verbose_name="Дата выхода сериала",
     )
     duration = models.IntegerField(
-        verbose_name="длительность серии",
+        verbose_name="Длительность серии",
     )
 
     class Meta:
@@ -31,8 +31,9 @@ class SerialModel(BaseContentModel):
 class PhotoSerial(models.Model):
     serial = models.ForeignKey(
         SerialModel,
-        verbose_name="сериал",
+        verbose_name="Сериал",
         on_delete=models.CASCADE,
+        related_name="cadrs",
     )
     photo_serial = models.ImageField(
         upload_to=f"media/photos_serials/{serial.name}",
@@ -40,8 +41,8 @@ class PhotoSerial(models.Model):
     )
 
     class Meta:
-        verbose_name = "Фотография из сериала"
-        verbose_name_plural = "Фотографии из сериалов"
+        verbose_name = "кадр из сериала"
+        verbose_name_plural = "кадры из сериалов"
 
     def __str__(self):
         return f"Фото {self.serial.name}"

@@ -11,7 +11,7 @@ User = get_user_model()
 class BaseUserRelation(models.Model):
     user = models.ForeignKey(
         User,
-        verbose_name="пользователь",
+        verbose_name="Пользователь",
         on_delete=models.CASCADE,
     )
     object_id = models.PositiveIntegerField()
@@ -51,8 +51,12 @@ class BasePersonModel(models.Model):
         abstract = True
 
 
-class ProducerModelBase(BasePersonModel):
-    films_made = models.ManyToManyField("FilmContentModel")
+class ProducerModel(BasePersonModel):
+    films_made = models.ManyToManyField(
+        "FilmModel",
+        verbose_name="Фильмы/сериалы",
+        blank=True,
+    )
 
     class Meta:
         verbose_name = "Продюсер"
@@ -63,7 +67,11 @@ class ProducerModelBase(BasePersonModel):
 
 
 class ActorModel(BasePersonModel):
-    films_participated = models.ManyToManyField("FilmContentModel")
+    films_participated = models.ManyToManyField(
+        "FilmModel",
+        verbose_name="Участие актера в следующих фильмах",
+        blank=True,
+    )
 
     class Meta:
         verbose_name = "Актер"
@@ -80,8 +88,8 @@ class GenreModel(models.Model):
     )
 
     class Meta:
-        verbose_name = "Жанр"
-        verbose_name_plural = "Жанры"
+        verbose_name = "жанр"
+        verbose_name_plural = "жанры"
 
     def __str__(self):
         return self.name
@@ -93,11 +101,11 @@ class ReactionModel(models.Model):
     )
 
     class Meta:
-        verbose_name = "Реакция"
-        verbose_name_plural = "Реакции"
+        verbose_name = "реакцию"
+        verbose_name_plural = "реакции"
 
     def __str__(self):
-        return self.reaction
+        return "Лайк" if self.reaction else "Дизлайк"
 
 
 class CountryModel(models.Model):
@@ -137,8 +145,8 @@ class BaseContentModel(models.Model):
         CountryModel,
         verbose_name="Страны",
     )
-    producer = models.ManyToManyField(
-        ProducerModelBase,
+    producers = models.ManyToManyField(
+        ProducerModel,
         verbose_name="Режиссер",
     )
     genre = models.ManyToManyField(
@@ -167,12 +175,12 @@ class BaseContentModel(models.Model):
         return self.reaction.filter(reaction=False).count()
 
 
-class FilmContentModel(BaseContentModel):
+class FilmModel(BaseContentModel):
     release_date = models.DateField(
         verbose_name="Дата выхода фильма",
     )
     duration = models.IntegerField(
-        verbose_name="длительность фильма",
+        verbose_name="Длительность фильма",
     )
 
     class Meta:
@@ -185,9 +193,10 @@ class FilmContentModel(BaseContentModel):
 
 class PhotoFilm(models.Model):
     film = models.ForeignKey(
-        FilmContentModel,
-        verbose_name="фильм",
+        FilmModel,
+        verbose_name="Фильм",
         on_delete=models.CASCADE,
+        related_name="cadrs",
     )
     photo_film = models.ImageField(
         upload_to=f"media/photos_films/{film.name}",
@@ -213,11 +222,11 @@ class FavoriteContent(BaseUserRelation):
 
 class IsContentWatch(BaseUserRelation):
     minutes = models.IntegerField(
-        verbose_name="минуты просмотра",
+        verbose_name="Минуты просмотра",
     )
     media = models.ForeignKey(
         MediaFile,
-        verbose_name="медиа",
+        verbose_name="Медиа",
         on_delete=models.CASCADE,
     )
 
