@@ -36,7 +36,7 @@ class PhotoSerial(models.Model):
         related_name="cadrs",
     )
     photo_serial = models.ImageField(
-        upload_to=f"media/photos_serials/{serial.name}",
+        upload_to="photos_serials/",
         verbose_name="Кадр из сериала",
     )
 

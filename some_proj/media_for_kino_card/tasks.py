@@ -40,7 +40,7 @@ def get_video_stream(filepath):
 
 @shared_task
 def recoding_files(orig_file_path, content_name, quality, correlation):
-    output_folder = f"media/{content_name}"
+    output_folder = f"some_proj/media/videos/{content_name}"
     # проверка на существующую папку
     check_or_create_package(output_folder)
     quality_params = {

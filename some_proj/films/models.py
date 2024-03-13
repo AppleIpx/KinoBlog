@@ -129,6 +129,7 @@ class BaseContentModel(models.Model):
     )
     poster = models.ImageField(
         verbose_name="Постер",
+        upload_to="posters/",
         blank=True,
     )
     trailer = models.CharField(
@@ -199,7 +200,7 @@ class PhotoFilm(models.Model):
         related_name="cadrs",
     )
     photo_film = models.ImageField(
-        upload_to=f"media/photos_films/{film.name}",
+        upload_to="photos_films/",
         verbose_name="Кадр из фильма",
     )
 
