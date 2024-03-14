@@ -1,5 +1,6 @@
 from rest_framework import permissions
 from rest_framework import viewsets
+from rest_framework.pagination import PageNumberPagination
 
 from some_proj.serials.models import SerialModel
 from some_proj.serials.serializers import AdminListAdminSerializer
@@ -12,6 +13,7 @@ from some_proj.serials.serializers import ListSerialSerializer
 
 class SerialsView(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
+    pagination_class = PageNumberPagination
     queryset = SerialModel.objects.all()
 
     def get_serializer_class(self):
