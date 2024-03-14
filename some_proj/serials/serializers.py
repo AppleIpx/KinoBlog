@@ -4,7 +4,7 @@ from some_proj.contrib.mixins import CountDislikeMixin
 from some_proj.contrib.mixins import CountLikeMixin
 from some_proj.contrib.mixins import DataAddedMixin
 from some_proj.contrib.mixins import FavoriteMixin
-from some_proj.films.serializers import BaseDetailedContentSerializer
+from some_proj.films.serializers.film_serializers import BaseDetailedContentSerializer
 from some_proj.serials.models import PhotoSerial
 from some_proj.serials.models import SerialModel
 
@@ -43,8 +43,6 @@ class ListSerialSerializer(CountLikeMixin, CountDislikeMixin, SerialSerializer):
 
 class SerialGuestSerializer(SerialSerializer):
     is_favorite = None
-    like_count = None
-    dislike_count = None
 
     class Meta(SerialSerializer.Meta):
         fields = [
@@ -53,8 +51,6 @@ class SerialGuestSerializer(SerialSerializer):
             if field
             not in [
                 "is_favorite",
-                "like_count",
-                "dislike_count",
             ]
         ]
 
@@ -66,12 +62,12 @@ class ListSerialGuestSerializer(SerialGuestSerializer):
         ]
 
 
-class AdminListAdminSerializer(DataAddedMixin, SerialSerializer):
+class AdminListAdminSerializer(DataAddedMixin, ListSerialSerializer):
     data_added = serializers.SerializerMethodField()
 
     class Meta(SerialSerializer.Meta):
         fields = [
-            *SerialSerializer.Meta.fields,
+            *ListSerialSerializer.Meta.fields,
             "data_added",
         ]
 

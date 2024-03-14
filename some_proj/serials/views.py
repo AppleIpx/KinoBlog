@@ -17,11 +17,24 @@ class SerialsView(viewsets.ModelViewSet):
     def get_serializer_class(self):
         user = self.request.user
         has_pk_param = bool(self.kwargs.get("pk"))
+        if has_pk_param:
+            self.action = "detailed"
+        else:
+            self.action = "list"
+        role = "staff" if user.is_staff else "authenticated" if user.is_authenticated else "anonymous"
 
         serializer_mapping = {
-            "authenticated": DetailedSerialSerializer if has_pk_param else ListSerialSerializer,
-            "anonymous": DetailedSerialGuestSerializer if has_pk_param else ListSerialGuestSerializer,
-            "staff": AdminSerialSerializer if has_pk_param else AdminListAdminSerializer,
+            "staff": {
+                "list": AdminListAdminSerializer,
+                "detailed": AdminSerialSerializer,
+            },
+            "authenticated": {
+                "list": ListSerialSerializer,
+                "detailed": DetailedSerialSerializer,
+            },
+            "anonymous": {
+                "list": ListSerialGuestSerializer,
+                "detailed": DetailedSerialGuestSerializer,
+            },
         }
-        role = "staff" if user.is_staff else "authenticated" if user.is_authenticated else "anonymous"
-        return serializer_mapping.get(role)
+        return serializer_mapping[role][self.action]
