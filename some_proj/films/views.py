@@ -1,5 +1,6 @@
 from rest_framework import permissions
 from rest_framework import viewsets
+from rest_framework.pagination import PageNumberPagination
 
 from some_proj.films.models import FilmModel
 from some_proj.films.serializers import AdminFilmSerializer
@@ -12,6 +13,7 @@ from some_proj.films.serializers import ListFilmSerializer
 
 class FilmsView(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny]
+    pagination_class = PageNumberPagination
     queryset = FilmModel.objects.all()
 
     def get_serializer_class(self):
