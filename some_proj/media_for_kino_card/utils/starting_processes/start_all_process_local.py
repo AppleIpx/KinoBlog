@@ -18,7 +18,7 @@ def start_process_media_files_local(instance):
     correlation = get_video_stream.delay(
         orig_file_path,
     )
-    correlation_value = correlation.get(timeout=10)
+    correlation_value = correlation.get(timeout=30)
     logging.info("Соотношение определено")
     for quality in qualities:
         # Кодирование видео
@@ -28,7 +28,7 @@ def start_process_media_files_local(instance):
             quality.name,
             correlation_value,
         )
-        recording_file_value = recording_file_path.get(propagate=False)
+        recording_file_path_value = recording_file_path.get(propagate=False)
         success_msg_recording = f"Кодирование качества{quality.name} прошло успешно"
         logging.info(success_msg_recording)
 
@@ -36,7 +36,7 @@ def start_process_media_files_local(instance):
         create_add_links(
             instance,
             quality,
-            recording_file_value,
+            recording_file_path_value,
         )
         success_msg_create_link = f"Локальные ссылка для качества {quality.name} успешно создана"
         logging.info(success_msg_create_link)

@@ -22,14 +22,14 @@ def start_signal_processes(instance):
                 logging.info("Переменные для подключения к S3 обнаружены")
 
                 # запуск всех процессов с S3
-                start_s3(previous_version)
+                start_s3(instance)
             else:
                 warning_message = "Необходимо установить переменные окружения для подключения к S3."
                 logging.warning(warning_message)
 
                 # запуск всех процессов локально
                 start_local(instance)
-        logging.info("Ссылка не изменена, кодирование не требуется")
+        logging.info("Ссылка на исходный файл не изменена, кодирование не требуется")
         # обновление полей медии
         update_media(instance)
     except Exception as e:
