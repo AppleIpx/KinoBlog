@@ -43,6 +43,7 @@ class BasePersonModel(models.Model):
     )
     photo = models.FileField(
         verbose_name="Фото",
+        upload_to="actor_prod_photos",
         blank=True,
         null=True,
     )
