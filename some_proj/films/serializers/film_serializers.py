@@ -8,12 +8,12 @@ from some_proj.contrib.mixins import FavoriteMixin
 from some_proj.contrib.mixins import SeeLateMixin
 from some_proj.contrib.mixins import UrlsMixin
 from some_proj.contrib.mixins import WatchMixin
-from some_proj.films.models import ActorModel
-from some_proj.films.models import CountryModel
 from some_proj.films.models import FilmModel
-from some_proj.films.models import GenreModel
-from some_proj.films.models import PhotoFilm
-from some_proj.films.models import ProducerModel
+from some_proj.films.serializers import ActorSerializer
+from some_proj.films.serializers import CountrySerializer
+from some_proj.films.serializers import GenreSerializer
+from some_proj.films.serializers import PhotoFilmSerializer
+from some_proj.films.serializers import ProducerSerializer
 
 
 class FilmsSerializer(FavoriteMixin, serializers.ModelSerializer):
@@ -47,8 +47,6 @@ class ListFilmSerializer(CountDislikeMixin, CountLikeMixin, FilmsSerializer):
 
 class FilmGuestSerializer(FilmsSerializer):
     is_favorite = None
-    like_count = None
-    dislike_count = None
 
     class Meta(ListFilmSerializer.Meta):
         fields = [
@@ -57,8 +55,6 @@ class FilmGuestSerializer(FilmsSerializer):
             if field
             not in [
                 "is_favorite",
-                "like_count",
-                "dislike_count",
             ]
         ]
 
@@ -68,53 +64,6 @@ class ListFilmGuestSerializer(FilmGuestSerializer):
         fields = [
             *FilmGuestSerializer.Meta.fields,
         ]
-
-
-class AdminListFilmSerializer(DataAddedMixin, FilmsSerializer):
-    data_added = serializers.SerializerMethodField()
-
-    class Meta(FilmsSerializer.Meta):
-        fields = [
-            *FilmsSerializer.Meta.fields,
-            "data_added",
-        ]
-
-
-class PhotoFilmSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PhotoFilm
-        fields = ["photo_film"]
-
-
-class ActorSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ActorModel
-        fields = [
-            "name",
-            "surname",
-            "patronymic",
-            "photo",
-        ]
-
-
-class ProducerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProducerModel
-        fields = [
-            *ActorSerializer.Meta.fields,
-        ]
-
-
-class CountrySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CountryModel
-        fields = ["name"]
-
-
-class GenreSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = GenreModel
-        fields = ["name"]
 
 
 class BaseDetailedContentSerializer(
@@ -183,5 +132,15 @@ class AdminFilmSerializer(DataAddedMixin, DetailedFilmSerializer):
     class Meta(DetailedFilmSerializer.Meta):
         fields = [
             *DetailedFilmSerializer.Meta.fields,
+            "data_added",
+        ]
+
+
+class AdminListFilmSerializer(DataAddedMixin, ListFilmSerializer):
+    data_added = serializers.SerializerMethodField()
+
+    class Meta(FilmsSerializer.Meta):
+        fields = [
+            *ListFilmSerializer.Meta.fields,
             "data_added",
         ]
