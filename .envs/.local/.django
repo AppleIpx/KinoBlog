@@ -12,3 +12,13 @@ REDIS_URL=redis://redis:6379/0
 # Flower
 CELERY_FLOWER_USER=yflYXovhywqdcgjJhxSxebeLDFBilghT
 CELERY_FLOWER_PASSWORD=VmJNqAnMehOO65nt6qBq2R3gpBZ4rg861a0wWG7H0HbNKEY4rzZREJJrBhMYGisp
+
+# AWS
+# ------------------------------------------------------------------------------
+
+AWS_ACCESS_KEY_ID=intern-24-izvekov
+AWS_SECRET_ACCESS_KEY=PiJkvnvnvvBRKwM7Uz86UFy
+AWS_STORAGE_BUCKET_NAME=intern-24-izvekov
+AWS_S3_CUSTOM_DOMAIN=https://minio.space.rdclr.ru
+AWS_S3_REGION_NAME=eu-west-2
+AWS_S3_MAX_MEMORY_SIZE=100_000_000_000_000

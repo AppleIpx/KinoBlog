@@ -1,24 +1,38 @@
 import logging
+from urllib.parse import urlparse
 
 import boto3
 import ffmpeg
+from botocore.config import Config
 from botocore.exceptions import ClientError
 from celery import shared_task
 from django.conf import settings
 
-from some_proj.media_for_kino_card.models import MediaFile
-from some_proj.media_for_kino_card.models import UrlsInMedia
 from some_proj.media_for_kino_card.utils.shared_files.check_or_create_local_package import check_or_create_package
 
 
 @shared_task
 def download_file_from_s3(s3_path_to_file, content_name):
-    s3 = boto3.client("s3")
-    bucket_name = settings.DJANGO_AWS_STORAGE_BUCKET_NAME
-    orig_file_local_path = f"media_s3/{content_name}"
+    output_folder = f"some_proj/media/media_s3/orig_videos/{content_name}/"
+    # создание папки
+    check_or_create_package(output_folder)
+    # извлекаем имя файла из url
+    parts = output_folder.split("/")
+    output_folder = output_folder + f"{parts[-2]}.mp4"
+    s3 = boto3.client(
+        "s3",
+        endpoint_url=settings.AWS_S3_CUSTOM_DOMAIN,
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+        config=Config(signature_version="s3v4"),
+        region_name=settings.AWS_S3_REGION_NAME,
+    )
+    bucket_name = settings.AWS_STORAGE_BUCKET_NAME
+    parsed_url = urlparse(s3_path_to_file).path
+    filename = parsed_url[parsed_url.index("orig_videos") :]
     try:
-        s3.download_file(bucket_name, s3_path_to_file, orig_file_local_path)
-        download_message = f"Файл {content_name} был успешно скачан и сохранен в {orig_file_local_path}."
+        s3.download_file(bucket_name, filename, output_folder)
+        download_message = f"Файл {content_name} был успешно скачан и сохранен в {output_folder}."
         logging.info(download_message)
     except ClientError:
         exception_message = "Ошибка при скачивании файла"
@@ -26,7 +40,7 @@ def download_file_from_s3(s3_path_to_file, content_name):
     else:
         success_message = "Скачивание файла прошло успешно"
         logging.info(success_message)
-        return orig_file_local_path
+        return output_folder
 
 
 @shared_task
@@ -85,25 +99,18 @@ def recoding_files(orig_file_path, content_name, quality, correlation):
 
 
 @shared_task
-def create_add_links_for_amazon(instance, qualities, recording_files_paths):
-    # создание ссылки на Amazon для каждого качества
-    media_file = MediaFile.objects.create(film=instance.film)
-    for quality, file_path in zip(qualities, recording_files_paths, strict=False):
-        s3_url = f"https://s3.amazonaws.com/your_bucket_name/{file_path}"
-        # занесение данных в UrlsInMedia
-        UrlsInMedia.objects.create(
-            media=media_file,
-            quality=quality,
-            url=s3_url,
-        )
-
-
-@shared_task
-def upload_to_s3(recording_file_value):
-    s3 = boto3.client("s3")
+def upload_to_s3(recording_file_value, s3_url):
+    s3 = boto3.client(
+        "s3",
+        endpoint_url=settings.AWS_S3_CUSTOM_DOMAIN,
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+        config=Config(signature_version="s3v4"),
+        region_name=settings.AWS_S3_REGION_NAME,
+    )
+    bucket_name = settings.AWS_STORAGE_BUCKET_NAME
     local_path = recording_file_value
-    path_s3 = recording_file_value
-    bucket_name = settings.DJANGO_AWS_STORAGE_BUCKET_NAME
+    path_s3 = s3_url
     try:
         s3.upload_file(local_path, bucket_name, path_s3)
     except FileNotFoundError:
