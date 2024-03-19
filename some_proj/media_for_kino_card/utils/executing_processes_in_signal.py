@@ -19,7 +19,8 @@ def start_signal_processes(instance):
 
             # проверка на имеющиеся переменные для S3
             if check_env():
-                logging.info("Переменные для подключения к S3 обнаружены")
+                env_message = "Переменные для подключения к S3 обнаружены"
+                logging.info(env_message)
 
                 # запуск всех процессов с S3
                 start_s3(instance)
@@ -29,7 +30,8 @@ def start_signal_processes(instance):
 
                 # запуск всех процессов локально
                 start_local(instance)
-        logging.info("Ссылка на исходный файл не изменена, кодирование не требуется")
+        url_info = "Ссылка на исходный файл не изменена, кодирование не требуется"
+        logging.info(url_info)
         # обновление полей медии
         update_media(instance)
     except Exception as e:
