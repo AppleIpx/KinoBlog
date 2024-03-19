@@ -1,13 +1,12 @@
 import logging
 from urllib.parse import urlparse
 
-import boto3
 import ffmpeg
-from botocore.config import Config
 from botocore.exceptions import ClientError
 from celery import shared_task
 from django.conf import settings
 
+from some_proj.media_for_kino_card.utils.connect_to_s3 import connect_s3
 from some_proj.media_for_kino_card.utils.shared_files.check_or_create_local_package import check_or_create_package
 
 
@@ -16,17 +15,14 @@ def download_file_from_s3(s3_path_to_file, content_name):
     output_folder = f"some_proj/media/media_s3/orig_videos/{content_name}/"
     # создание папки
     check_or_create_package(output_folder)
+
     # извлекаем имя файла из url
     parts = output_folder.split("/")
     output_folder = output_folder + f"{parts[-2]}.mp4"
-    s3 = boto3.client(
-        "s3",
-        endpoint_url=settings.AWS_S3_CUSTOM_DOMAIN,
-        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-        config=Config(signature_version="s3v4"),
-        region_name=settings.AWS_S3_REGION_NAME,
-    )
+
+    # создание подключения к s3
+    s3 = connect_s3()
+
     bucket_name = settings.AWS_STORAGE_BUCKET_NAME
     parsed_url = urlparse(s3_path_to_file).path
     filename = parsed_url[parsed_url.index("orig_videos") :]
@@ -100,14 +96,8 @@ def recoding_files(orig_file_path, content_name, quality, correlation):
 
 @shared_task
 def upload_to_s3(recording_file_value, s3_url):
-    s3 = boto3.client(
-        "s3",
-        endpoint_url=settings.AWS_S3_CUSTOM_DOMAIN,
-        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-        config=Config(signature_version="s3v4"),
-        region_name=settings.AWS_S3_REGION_NAME,
-    )
+    # подключение к s3
+    s3 = connect_s3()
     bucket_name = settings.AWS_STORAGE_BUCKET_NAME
     local_path = recording_file_value
     path_s3 = s3_url
@@ -116,5 +106,8 @@ def upload_to_s3(recording_file_value, s3_url):
     except FileNotFoundError:
         message_file_not_found = f"Файл {recording_file_value}не найден"
         logging.info(message_file_not_found)
+        return message_file_not_found
     else:
-        logging.info("Файл успешно загружен на S3")
+        success_message = "Файл успешно загружен на S3"
+        logging.info(success_message)
+        return success_message
