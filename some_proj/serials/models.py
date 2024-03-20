@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 
 from some_proj.films.models import BaseContentModel
+from some_proj.media_for_kino_card.utils.shared_files import generate_filename_photos
 
 User = get_user_model()
 
@@ -36,7 +37,7 @@ class PhotoSerial(models.Model):
         related_name="cadrs",
     )
     photo_serial = models.ImageField(
-        upload_to="photos_serials/",
+        upload_to=generate_filename_photos,
         verbose_name="Кадр из сериала",
     )
 
