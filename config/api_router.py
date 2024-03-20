@@ -9,8 +9,8 @@ from some_proj.users.api.views import UserViewSet
 router = DefaultRouter() if settings.DEBUG else SimpleRouter()
 
 router.register("users", UserViewSet)
-router.register("films", FilmsView)
-router.register("serials", SerialsView)
+router.register(r"films", FilmsView, basename="films")
+router.register("serials", SerialsView, basename="serials")
 
 
 app_name = "api"

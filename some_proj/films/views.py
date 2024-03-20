@@ -1,3 +1,5 @@
+from drf_spectacular.utils import extend_schema
+from rest_framework import mixins
 from rest_framework import permissions
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
@@ -11,10 +13,21 @@ from some_proj.films.serializers.film_serializers import ListFilmGuestSerializer
 from some_proj.films.serializers.film_serializers import ListFilmSerializer
 
 
-class FilmsView(viewsets.ModelViewSet):
+@extend_schema(tags=["Films"])
+class FilmsView(
+    viewsets.GenericViewSet,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+):
     permission_classes = [permissions.AllowAny]
     pagination_class = PageNumberPagination
     queryset = FilmModel.objects.all()
+
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
 
     def get_serializer_class(self):
         user = self.request.user
