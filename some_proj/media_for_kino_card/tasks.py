@@ -1,13 +1,10 @@
-import logging
 from urllib.parse import urlparse
 
 import ffmpeg
-from botocore.exceptions import ClientError
 from celery import shared_task
-from django.conf import settings
 
-from some_proj.media_for_kino_card.utils.connect_to_s3 import connect_s3
-from some_proj.media_for_kino_card.utils.shared_files.check_or_create_local_package import check_or_create_package
+from some_proj.media_for_kino_card.S3.s3_client import s3_current_client
+from some_proj.media_for_kino_card.utils.shared_files import check_or_create_package
 
 
 @shared_task
@@ -19,24 +16,10 @@ def download_file_from_s3(s3_path_to_file, content_name):
     # извлекаем имя файла из url
     parts = output_folder.split("/")
     output_folder = output_folder + f"{parts[-2]}.mp4"
-
-    # создание подключения к s3
-    s3 = connect_s3()
-
-    bucket_name = settings.AWS_STORAGE_BUCKET_NAME
     parsed_url = urlparse(s3_path_to_file).path
     filename = parsed_url[parsed_url.index("orig_videos") :]
-    try:
-        s3.download_file(bucket_name, filename, output_folder)
-        download_message = f"Файл {content_name} был успешно скачан и сохранен в {output_folder}."
-        logging.info(download_message)
-    except ClientError:
-        exception_message = "Ошибка при скачивании файла"
-        logging.exception(exception_message)
-    else:
-        success_message = "Скачивание файла прошло успешно"
-        logging.info(success_message)
-        return output_folder
+
+    return s3_current_client.download_content(filename, output_folder)
 
 
 @shared_task
@@ -95,19 +78,5 @@ def recoding_files(orig_file_path, content_name, quality, correlation):
 
 
 @shared_task
-def upload_to_s3(recording_file_value, s3_url):
-    # подключение к s3
-    s3 = connect_s3()
-    bucket_name = settings.AWS_STORAGE_BUCKET_NAME
-    local_path = recording_file_value
-    path_s3 = s3_url
-    try:
-        s3.upload_file(local_path, bucket_name, path_s3)
-    except FileNotFoundError:
-        message_file_not_found = f"Файл {recording_file_value}не найден"
-        logging.info(message_file_not_found)
-        return message_file_not_found
-    else:
-        success_message = "Файл успешно загружен на S3"
-        logging.info(success_message)
-        return success_message
+def upload_to_s3(local_path, s3_url):
+    return s3_current_client.upload_content(local_path, s3_url)
