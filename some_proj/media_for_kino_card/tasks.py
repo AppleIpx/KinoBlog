@@ -1,23 +1,19 @@
-from urllib.parse import urlparse
-
 import ffmpeg
 from celery import shared_task
 
 from some_proj.media_for_kino_card.S3.s3_client import s3_current_client
 from some_proj.media_for_kino_card.utils.shared_files import check_or_create_package
+from some_proj.media_for_kino_card.utils.shared_files import extract_name
 
 
 @shared_task
 def download_file_from_s3(s3_path_to_file, content_name):
     output_folder = f"some_proj/media/media_s3/orig_videos/{content_name}/"
-    # создание папки
+    # создание локальной папки
     check_or_create_package(output_folder)
 
-    # извлекаем имя файла из url
-    parts = output_folder.split("/")
-    output_folder = output_folder + f"{parts[-2]}.mp4"
-    parsed_url = urlparse(s3_path_to_file).path
-    filename = parsed_url[parsed_url.index("orig_videos") :]
+    # извлекаем имя файла из url и генерируем локальные ссылки
+    filename, output_folder = extract_name(output_folder, s3_path_to_file)
 
     return s3_current_client.download_content(filename, output_folder)
 
