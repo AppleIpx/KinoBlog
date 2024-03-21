@@ -4,6 +4,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 from some_proj.media_for_kino_card.models import MediaFile
+from some_proj.media_for_kino_card.utils.shared_files import generate_filename_photos
 
 User = get_user_model()
 
@@ -43,7 +44,7 @@ class BasePersonModel(models.Model):
     )
     photo = models.FileField(
         verbose_name="Фото",
-        upload_to="actor_prod_photos",
+        upload_to=generate_filename_photos,
         blank=True,
         null=True,
     )
@@ -130,7 +131,7 @@ class BaseContentModel(models.Model):
     )
     poster = models.ImageField(
         verbose_name="Постер",
-        upload_to="posters/",
+        upload_to=generate_filename_photos,
         blank=True,
     )
     trailer = models.CharField(
@@ -140,7 +141,7 @@ class BaseContentModel(models.Model):
     description = models.TextField(
         verbose_name="Описание",
     )
-    age_limit = models.IntegerField(
+    age_limit = models.PositiveSmallIntegerField(
         verbose_name="Возрастное ограничение",
     )
     country = models.ManyToManyField(
@@ -181,7 +182,7 @@ class FilmModel(BaseContentModel):
     release_date = models.DateField(
         verbose_name="Дата выхода фильма",
     )
-    duration = models.IntegerField(
+    duration = models.PositiveSmallIntegerField(
         verbose_name="Длительность фильма",
     )
 
@@ -201,7 +202,7 @@ class PhotoFilm(models.Model):
         related_name="cadrs",
     )
     photo_film = models.ImageField(
-        upload_to="photos_films/",
+        upload_to=generate_filename_photos,
         verbose_name="Кадр из фильма",
     )
 
