@@ -1,6 +1,5 @@
 # ruff: noqa: ERA001, E501
 """Base settings to build other settings files upon."""
-
 from pathlib import Path
 
 import environ
@@ -83,6 +82,7 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "drf_spectacular",
     "storages",
+    "silk",
 ]
 
 LOCAL_APPS = [
@@ -150,6 +150,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
+    "silk.middleware.SilkyMiddleware",
 ]
 
 # STATIC
@@ -312,7 +313,7 @@ ACCOUNT_USERNAME_REQUIRED = False
 # https://docs.allauth.org/en/latest/account/configuration.html
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 # https://docs.allauth.org/en/latest/account/configuration.html
-ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_EMAIL_VERIFICATION = "none"
 # https://docs.allauth.org/en/latest/account/configuration.html
 ACCOUNT_ADAPTER = "some_proj.users.adapters.AccountAdapter"
 # https://docs.allauth.org/en/latest/account/forms.html
@@ -345,7 +346,7 @@ SPECTACULAR_SETTINGS = {
     "TITLE": "new_some_proj API",
     "DESCRIPTION": "Documentation of API endpoints of new_some_proj",
     "VERSION": "1.0.0",
-    "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
+    "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAuthenticatedOrReadOnly"],
 }
 # Your stuff...
 # ------------------------------------------------------------------------------
@@ -386,3 +387,13 @@ STORAGES = {
     },
 }
 MEDIA_URL = f"{AWS_S3_CUSTOM_DOMAIN}/{AWS_STORAGE_BUCKET_NAME}/"
+
+
+# sink
+# --------------
+SILKY_AUTHENTICATION = True
+SILKY_AUTHORISATION = True
+SILKY_PERMISSIONS = lambda user: user.is_superuser  # noqa: E731
+SILKY_META = True
+SILKY_ANALYZE_QUERIES = True
+SILKY_INTERCEPT_PERCENT = env.int("SILK_PERCENT", default=0)
