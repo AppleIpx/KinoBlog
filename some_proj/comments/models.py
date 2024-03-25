@@ -31,4 +31,4 @@ class CommentModel(models.Model):
         verbose_name_plural = "комментарии"
 
     def __str__(self):
-        return f"Комментарий от {self.user.first_name} в {self.content_type.name}"
+        return f"Комментарий от {self.user.first_name} в {self.content_object.name}"
