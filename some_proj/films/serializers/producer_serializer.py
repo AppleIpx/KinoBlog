@@ -8,6 +8,7 @@ class ProducerSerializer(BaseHTTPRemoverSerializer, serializers.ModelSerializer)
     class Meta:
         model = ProducerModel
         fields = [
+            "id",
             "name",
             "surname",
             "patronymic",

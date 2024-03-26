@@ -8,16 +8,16 @@ User = get_user_model()
 
 
 class SerialModel(BaseContentModel):
-    season = models.PositiveIntegerField(
+    season = models.PositiveSmallIntegerField(
         verbose_name="Сезон",
     )
-    num_serials = models.PositiveIntegerField(
+    num_serials = models.PositiveSmallIntegerField(
         verbose_name="Кол-во серий",
     )
     release_date = models.DateField(
         verbose_name="Дата выхода сериала",
     )
-    duration = models.IntegerField(
+    duration = models.PositiveSmallIntegerField(
         verbose_name="Длительность серии",
     )
 

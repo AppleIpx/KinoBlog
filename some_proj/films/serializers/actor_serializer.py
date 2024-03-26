@@ -8,6 +8,7 @@ class ActorSerializer(BaseHTTPRemoverSerializer, serializers.ModelSerializer):
     class Meta:
         model = ActorModel
         fields = [
+            "id",
             "name",
             "surname",
             "patronymic",

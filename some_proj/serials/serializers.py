@@ -5,11 +5,16 @@ from some_proj.contrib.mixins import CountLikeMixin
 from some_proj.contrib.mixins import DataAddedMixin
 from some_proj.contrib.mixins import FavoriteMixin
 from some_proj.films.serializers.film_serializers import BaseDetailedContentSerializer
+from some_proj.media_for_kino_card.utils.shared_files import BaseHTTPRemoverSerializer
 from some_proj.serials.models import PhotoSerial
 from some_proj.serials.models import SerialModel
 
 
-class SerialSerializer(FavoriteMixin, serializers.ModelSerializer):
+class SerialSerializer(
+    FavoriteMixin,
+    BaseHTTPRemoverSerializer,
+    serializers.ModelSerializer,
+):
     poster = serializers.ImageField()
     is_favorite = serializers.SerializerMethodField()
 
@@ -24,9 +29,14 @@ class SerialSerializer(FavoriteMixin, serializers.ModelSerializer):
             "season",
             "num_serials",
         ]
+        fields_to_process = ["poster"]
 
 
-class ListSerialSerializer(CountLikeMixin, CountDislikeMixin, SerialSerializer):
+class ListSerialSerializer(
+    CountLikeMixin,
+    CountDislikeMixin,
+    SerialSerializer,
+):
     dislike_count = serializers.SerializerMethodField()
     like_count = serializers.SerializerMethodField()
 
@@ -34,7 +44,6 @@ class ListSerialSerializer(CountLikeMixin, CountDislikeMixin, SerialSerializer):
         fields = [
             *SerialSerializer.Meta.fields,
             "duration",
-            "genre",
             "like_count",
             "dislike_count",
             "age_limit",
@@ -75,7 +84,10 @@ class AdminListAdminSerializer(DataAddedMixin, ListSerialSerializer):
 class PhotoSerialSerializer(serializers.ModelSerializer):
     class Meta:
         model = PhotoSerial
-        fields = ["photo_serial"]
+        fields = [
+            "id",
+            "photo_serial",
+        ]
 
 
 class DetailedSerialSerializer(
@@ -101,7 +113,10 @@ class DetailedSerialSerializer(
         ]
 
 
-class DetailedSerialGuestSerializer(DetailedSerialSerializer, SerialGuestSerializer):
+class DetailedSerialGuestSerializer(
+    DetailedSerialSerializer,
+    SerialGuestSerializer,
+):
     is_watched = None
     is_see_late = None
 

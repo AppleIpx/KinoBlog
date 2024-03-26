@@ -10,27 +10,28 @@ from some_proj.contrib.mixins import UrlsMixin
 from some_proj.contrib.mixins import WatchMixin
 from some_proj.films.models import FilmModel
 from some_proj.films.serializers import ActorSerializer
+from some_proj.films.serializers import CadrsFilmSerializer
 from some_proj.films.serializers import CountrySerializer
 from some_proj.films.serializers import GenreSerializer
-from some_proj.films.serializers import PhotoFilmSerializer
 from some_proj.films.serializers import ProducerSerializer
+from some_proj.media_for_kino_card.utils.shared_files import BaseHTTPRemoverSerializer
 
 
-class FilmsSerializer(FavoriteMixin, serializers.ModelSerializer):
-    poster = serializers.ImageField()
+class FilmsSerializer(FavoriteMixin, BaseHTTPRemoverSerializer, serializers.ModelSerializer):
     is_favorite = serializers.SerializerMethodField()
 
     class Meta:
         model = FilmModel
         fields = [
-            "poster",
             "id",
+            "poster",
             "name",
             "release_date",
             "duration",
             "is_favorite",
             "age_limit",
         ]
+        fields_to_process = ["poster"]
 
 
 class ListFilmSerializer(CountDislikeMixin, CountLikeMixin, FilmsSerializer):
@@ -87,7 +88,7 @@ class DetailedFilmSerializer(
     BaseDetailedContentSerializer,
     ListFilmSerializer,
 ):
-    cadrs = PhotoFilmSerializer(many=True)
+    cadrs = CadrsFilmSerializer(many=True)
 
     class Meta(ListFilmSerializer.Meta):
         fields = [

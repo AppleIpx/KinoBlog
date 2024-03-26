@@ -6,4 +6,7 @@ from some_proj.films.models import CountryModel
 class CountrySerializer(serializers.ModelSerializer):
     class Meta:
         model = CountryModel
-        fields = ["name"]
+        fields = [
+            "id",
+            "name",
+        ]
