@@ -1,6 +1,6 @@
 import logging
 
-from some_proj.media_for_kino_card.utils.shared_files import check_env
+from some_proj.media_for_kino_card.utils.s3_files import check_env_files
 from some_proj.media_for_kino_card.utils.shared_files import check_urls
 from some_proj.media_for_kino_card.utils.shared_files import update_media
 from some_proj.media_for_kino_card.utils.starting_processes import start_local
@@ -15,7 +15,7 @@ def start_signal_processes(instance):
         # проверка на изменение исходного пути
         if check_urls(previous_version, instance):
             # проверка на имеющиеся переменные для S3
-            if check_env():
+            if check_env_files():
                 # запуск всех процессов с S3
                 start_s3(instance)
             else:

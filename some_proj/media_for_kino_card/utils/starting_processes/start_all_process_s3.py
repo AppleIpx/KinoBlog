@@ -2,12 +2,12 @@ import logging
 
 from some_proj.media_for_kino_card.models import Quality
 from some_proj.media_for_kino_card.tasks import upload_to_s3
+from some_proj.media_for_kino_card.utils.celery_files import download_file_s3
+from some_proj.media_for_kino_card.utils.celery_files import encoding
+from some_proj.media_for_kino_card.utils.celery_files import get_correlation
+from some_proj.media_for_kino_card.utils.s3_files import create_links
 from some_proj.media_for_kino_card.utils.shared_files import check_instance
 from some_proj.media_for_kino_card.utils.shared_files import create_add_links
-from some_proj.media_for_kino_card.utils.shared_files import create_links
-from some_proj.media_for_kino_card.utils.shared_files import download_file_s3
-from some_proj.media_for_kino_card.utils.shared_files import encoding
-from some_proj.media_for_kino_card.utils.shared_files import get_correlation
 
 
 # запуск всех процессов s3
