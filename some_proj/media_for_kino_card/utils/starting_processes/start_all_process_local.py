@@ -1,10 +1,10 @@
 import logging
 
 from some_proj.media_for_kino_card.models import Quality
-from some_proj.media_for_kino_card.tasks import get_video_stream
-from some_proj.media_for_kino_card.tasks import recoding_files
 from some_proj.media_for_kino_card.utils.shared_files import check_instance
 from some_proj.media_for_kino_card.utils.shared_files import create_add_links
+from some_proj.media_for_kino_card.utils.shared_files import encoding
+from some_proj.media_for_kino_card.utils.shared_files import get_correlation
 
 
 def start_process_media_files_local(instance):
@@ -15,23 +15,16 @@ def start_process_media_files_local(instance):
     content_name = check_instance(instance)
 
     # Определение соотношения разрешения оригинального фильма
-    correlation = get_video_stream.delay(
-        orig_file_path,
-    )
-    correlation_value = correlation.get(timeout=30)
-    logging.info("Соотношение определено")
+    # получение отношения ширины к высоте исходного кадра
+    correlation_value = get_correlation(orig_file_path)
     for quality in qualities:
         # Кодирование видео
-        recording_file_path = recoding_files.delay(
+        recording_file_path_value = encoding(
             orig_file_path,
             content_name,
-            quality.name,
+            quality,
             correlation_value,
         )
-        recording_file_path_value = recording_file_path.get(propagate=False)
-        success_msg_recording = f"Кодирование качества{quality.name} прошло успешно"
-        logging.info(success_msg_recording)
-
         # Создание и добавление в таблицу локальных ссылок видео-файлов
         create_add_links(
             instance,
