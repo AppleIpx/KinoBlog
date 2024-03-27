@@ -2,8 +2,8 @@ import ffmpeg
 from celery import shared_task
 
 from some_proj.media_for_kino_card.S3.s3_client import s3_current_client
+from some_proj.media_for_kino_card.utils.s3_files import extract_name
 from some_proj.media_for_kino_card.utils.shared_files import check_or_create_package
-from some_proj.media_for_kino_card.utils.shared_files import extract_name
 
 
 @shared_task

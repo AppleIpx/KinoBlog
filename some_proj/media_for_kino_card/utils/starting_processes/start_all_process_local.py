@@ -1,10 +1,10 @@
 import logging
 
 from some_proj.media_for_kino_card.models import Quality
+from some_proj.media_for_kino_card.utils.celery_files import encoding
+from some_proj.media_for_kino_card.utils.celery_files import get_correlation
 from some_proj.media_for_kino_card.utils.shared_files import check_instance
 from some_proj.media_for_kino_card.utils.shared_files import create_add_links
-from some_proj.media_for_kino_card.utils.shared_files import encoding
-from some_proj.media_for_kino_card.utils.shared_files import get_correlation
 
 
 def start_process_media_files_local(instance):
