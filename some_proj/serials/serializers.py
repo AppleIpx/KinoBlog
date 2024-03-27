@@ -71,7 +71,7 @@ class ListSerialGuestSerializer(SerialGuestSerializer):
         ]
 
 
-class AdminListAdminSerializer(DataAddedMixin, ListSerialSerializer):
+class AdminListSerialSerializer(DataAddedMixin, ListSerialSerializer):
     data_added = serializers.SerializerMethodField()
 
     class Meta(SerialSerializer.Meta):
