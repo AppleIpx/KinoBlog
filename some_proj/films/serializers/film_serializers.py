@@ -1,10 +1,10 @@
 from rest_framework import serializers
 
 from some_proj.contrib.mixins import CommentMixin
-from some_proj.contrib.mixins import CountDislikeMixin
-from some_proj.contrib.mixins import CountLikeMixin
 from some_proj.contrib.mixins import DataAddedMixin
 from some_proj.contrib.mixins import FavoriteMixin
+from some_proj.contrib.mixins import GetPostersMixin
+from some_proj.contrib.mixins import ReationCountMixin
 from some_proj.contrib.mixins import SeeLateMixin
 from some_proj.contrib.mixins import UrlsMixin
 from some_proj.contrib.mixins import WatchMixin
@@ -14,27 +14,40 @@ from some_proj.films.serializers import CadrsFilmSerializer
 from some_proj.films.serializers import CountrySerializer
 from some_proj.films.serializers import GenreSerializer
 from some_proj.films.serializers import ProducerSerializer
-from some_proj.media_for_kino_card.utils.shared_files import BaseHTTPRemoverSerializer
+from some_proj.media_for_kino_card.utils.shared_files import HTTPRemoverSerializer
 
 
-class FilmsSerializer(FavoriteMixin, BaseHTTPRemoverSerializer, serializers.ModelSerializer):
+class FilmsSerializer(
+    FavoriteMixin,
+    GetPostersMixin,
+    HTTPRemoverSerializer,
+    serializers.ModelSerializer,
+):
     is_favorite = serializers.SerializerMethodField()
+    posters = serializers.SerializerMethodField()
 
     class Meta:
         model = FilmModel
         fields = [
             "id",
             "poster",
+            "posters",
             "name",
             "release_date",
             "duration",
             "is_favorite",
             "age_limit",
         ]
-        fields_to_process = ["poster"]
+        fields_to_process = [
+            "poster",
+            "posters",
+        ]
 
 
-class ListFilmSerializer(CountDislikeMixin, CountLikeMixin, FilmsSerializer):
+class ListFilmSerializer(
+    ReationCountMixin,
+    FilmsSerializer,
+):
     dislike_count = serializers.SerializerMethodField()
     like_count = serializers.SerializerMethodField()
 
@@ -67,7 +80,8 @@ class ListFilmGuestSerializer(FilmGuestSerializer):
         ]
 
 
-class BaseDetailedContentSerializer(
+class DetailedContentSerializer(
+    HTTPRemoverSerializer,
     WatchMixin,
     SeeLateMixin,
     CommentMixin,
@@ -85,7 +99,7 @@ class BaseDetailedContentSerializer(
 
 
 class DetailedFilmSerializer(
-    BaseDetailedContentSerializer,
+    DetailedContentSerializer,
     ListFilmSerializer,
 ):
     cadrs = CadrsFilmSerializer(many=True)

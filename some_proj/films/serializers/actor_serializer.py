@@ -1,10 +1,10 @@
 from rest_framework import serializers
 
 from some_proj.films.models import ActorModel
-from some_proj.media_for_kino_card.utils.shared_files import BaseHTTPRemoverSerializer
+from some_proj.media_for_kino_card.utils.shared_files import HTTPRemoverSerializer
 
 
-class ActorSerializer(BaseHTTPRemoverSerializer, serializers.ModelSerializer):
+class ActorSerializer(HTTPRemoverSerializer, serializers.ModelSerializer):
     class Meta:
         model = ActorModel
         fields = [
