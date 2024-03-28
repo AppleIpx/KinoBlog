@@ -1,7 +1,12 @@
+from io import BytesIO
+
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import ValidationError
 from django.db import models
+from PIL import Image
+from sorl.thumbnail import ImageField
 
 from some_proj.media_for_kino_card.models import MediaFile
 from some_proj.media_for_kino_card.utils.shared_files import generate_filename_photos
@@ -129,7 +134,7 @@ class BaseContentModel(models.Model):
         verbose_name="Название",
         max_length=226,
     )
-    poster = models.ImageField(
+    poster = ImageField(
         verbose_name="Постер",
         upload_to=generate_filename_photos,
         blank=True,
@@ -176,6 +181,15 @@ class BaseContentModel(models.Model):
     @property
     def dislike_count(self):
         return self.reaction.filter(reaction=False).count()
+
+    def clean(self):
+        super().clean()
+        if self.poster:
+            image = Image.open(BytesIO(self.poster.read()))
+            width, height = image.size
+            if width >= height:
+                error_message = "Высота изображения должна быть больше его ширины."
+                raise ValidationError(error_message)
 
 
 class FilmModel(BaseContentModel):
