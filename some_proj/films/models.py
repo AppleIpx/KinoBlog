@@ -2,8 +2,10 @@ from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from sorl.thumbnail import ImageField
 
 from some_proj.media_for_kino_card.models import MediaFile
+from some_proj.media_for_kino_card.utils.shared_files import clean
 from some_proj.media_for_kino_card.utils.shared_files import generate_filename_photos
 
 User = get_user_model()
@@ -76,8 +78,8 @@ class ActorModel(BasePersonModel):
     )
 
     class Meta:
-        verbose_name = "Актер"
-        verbose_name_plural = "Актеры"
+        verbose_name = "актер"
+        verbose_name_plural = "актеры"
 
     def __str__(self):
         return self.name
@@ -117,8 +119,8 @@ class CountryModel(models.Model):
     )
 
     class Meta:
-        verbose_name = "Страна"
-        verbose_name_plural = "Страны"
+        verbose_name = "страна"
+        verbose_name_plural = "страны"
 
     def __str__(self):
         return self.name
@@ -129,9 +131,10 @@ class BaseContentModel(models.Model):
         verbose_name="Название",
         max_length=226,
     )
-    poster = models.ImageField(
+    poster = ImageField(
         verbose_name="Постер",
         upload_to=generate_filename_photos,
+        validators=[clean],
         blank=True,
     )
     trailer = models.CharField(

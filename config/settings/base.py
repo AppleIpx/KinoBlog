@@ -83,6 +83,7 @@ THIRD_PARTY_APPS = [
     "drf_spectacular",
     "storages",
     "silk",
+    "sorl.thumbnail",
 ]
 
 LOCAL_APPS = [
@@ -331,7 +332,7 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
         "rest_framework.authentication.TokenAuthentication",
     ),
-    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.AllowAny",),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
@@ -397,3 +398,11 @@ SILKY_PERMISSIONS = lambda user: user.is_superuser  # noqa: E731
 SILKY_META = True
 SILKY_ANALYZE_QUERIES = True
 SILKY_INTERCEPT_PERCENT = env.int("SILK_PERCENT", default=0)
+
+# sorl-thumbnail
+# --------------
+THUMBNAIL_FORCE_OVERWRITE = True
+THUMBNAIL_PREFIX = "photos/"
+THUMBNAIL_KVSTORE = "sorl.thumbnail.kvstores.redis_kvstore.KVStore"
+THUMBNAIL_DEGUG = True
+THUMBNAIL_FAST_URL = True
