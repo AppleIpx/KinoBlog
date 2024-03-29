@@ -1,18 +1,17 @@
 from rest_framework import serializers
 
-from some_proj.contrib.mixins import CountDislikeMixin
-from some_proj.contrib.mixins import CountLikeMixin
 from some_proj.contrib.mixins import DataAddedMixin
 from some_proj.contrib.mixins import FavoriteMixin
-from some_proj.films.serializers.film_serializers import BaseDetailedContentSerializer
-from some_proj.media_for_kino_card.utils.shared_files import BaseHTTPRemoverSerializer
+from some_proj.contrib.mixins import ReationCountMixin
+from some_proj.films.serializers.film_serializers import DetailedContentSerializer
+from some_proj.media_for_kino_card.utils.shared_files import HTTPRemoverSerializer
 from some_proj.serials.models import PhotoSerial
 from some_proj.serials.models import SerialModel
 
 
 class SerialSerializer(
     FavoriteMixin,
-    BaseHTTPRemoverSerializer,
+    HTTPRemoverSerializer,
     serializers.ModelSerializer,
 ):
     poster = serializers.ImageField()
@@ -33,9 +32,8 @@ class SerialSerializer(
 
 
 class ListSerialSerializer(
-    CountLikeMixin,
-    CountDislikeMixin,
     SerialSerializer,
+    ReationCountMixin,
 ):
     dislike_count = serializers.SerializerMethodField()
     like_count = serializers.SerializerMethodField()
@@ -91,7 +89,7 @@ class PhotoSerialSerializer(serializers.ModelSerializer):
 
 
 class DetailedSerialSerializer(
-    BaseDetailedContentSerializer,
+    DetailedContentSerializer,
     ListSerialSerializer,
 ):
     cadrs = PhotoSerialSerializer(many=True)
