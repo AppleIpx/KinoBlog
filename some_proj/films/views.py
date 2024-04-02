@@ -1,14 +1,24 @@
+from django.contrib.contenttypes.models import ContentType
+from django.db.models import Count
+from django.db.models import Exists
+from django.db.models import OuterRef
+from django.db.models import Q
+from django.db.models import Subquery
 from drf_spectacular.utils import extend_schema
 from rest_framework import mixins
 from rest_framework import viewsets
 
+from some_proj.films.models import FavoriteContent
 from some_proj.films.models import FilmModel
+from some_proj.films.models import IsContentWatch
+from some_proj.films.models import SeeLateContent
 from some_proj.films.serializers.film_serializers import AdminFilmSerializer
 from some_proj.films.serializers.film_serializers import AdminListFilmSerializer
 from some_proj.films.serializers.film_serializers import DetailedFilmGuestSerializer
 from some_proj.films.serializers.film_serializers import DetailedFilmSerializer
 from some_proj.films.serializers.film_serializers import ListFilmGuestSerializer
 from some_proj.films.serializers.film_serializers import ListFilmSerializer
+from some_proj.media_for_kino_card.models import MediaFile
 
 
 class BaseContentView(
@@ -30,6 +40,41 @@ class BaseContentView(
             self.action = "list"
         role = "staff" if user.is_staff else "authenticated" if user.is_authenticated else "anonymous"
         return self.serializer_mapping[role][self.action]
+
+    def get_annotated_queryset(self, model):
+        content_type = ContentType.objects.get_for_model(model)
+        media_files_qs = MediaFile.objects.filter(
+            content_type=content_type,
+            object_id=OuterRef("pk"),
+        ).order_by("id")
+        user = self.request.user
+
+        return model.objects.annotate(
+            like_count=Count("reaction", filter=Q(reaction__reaction=True)),
+            dislike_count=Count("reaction", filter=Q(reaction__reaction=False)),
+            is_favorite=Exists(
+                FavoriteContent.objects.filter(
+                    content_type=content_type,
+                    object_id=OuterRef("pk"),
+                    user=user,
+                ),
+            ),
+            is_watched=Exists(
+                IsContentWatch.objects.filter(
+                    content_type=content_type,
+                    object_id=OuterRef("pk"),
+                    user=user,
+                ),
+            ),
+            is_see_late=Exists(
+                SeeLateContent.objects.filter(
+                    content_type=content_type,
+                    object_id=OuterRef("pk"),
+                    user=user,
+                ),
+            ),
+            data_added=Subquery(media_files_qs.values("data_added")[:1]),
+        )
 
 
 @extend_schema(tags=["Films"])
@@ -66,10 +111,4 @@ class FilmsView(BaseContentView):
         return super().retrieve(request, *args, **kwargs)
 
     def get_queryset(self):
-        return FilmModel.objects.all().prefetch_related(
-            "country",
-            "producers",
-            "genre",
-            "actors",
-            "reaction",
-        )
+        return self.get_annotated_queryset(FilmModel)

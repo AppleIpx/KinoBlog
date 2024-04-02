@@ -99,7 +99,7 @@ class GenreModel(models.Model):
         return self.name
 
 
-class ReactionModel(models.Model):
+class ReactionModel(BaseUserRelation):
     reaction = models.BooleanField(
         verbose_name="Лайк/Дизлайк",
     )
@@ -171,14 +171,6 @@ class BaseContentModel(models.Model):
 
     class Meta:
         abstract = True
-
-    @property
-    def like_count(self):
-        return self.reaction.filter(reaction=True).count()
-
-    @property
-    def dislike_count(self):
-        return self.reaction.filter(reaction=False).count()
 
 
 class FilmModel(BaseContentModel):

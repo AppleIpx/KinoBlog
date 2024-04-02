@@ -12,6 +12,7 @@ from some_proj.serials.serializers import ListSerialSerializer
 
 @extend_schema(tags=["Serials"])
 class SerialsView(BaseContentView):
+    model = SerialModel
     serializer_mapping = {
         "staff": {
             "list": AdminListSerialSerializer,
@@ -27,11 +28,21 @@ class SerialsView(BaseContentView):
         },
     }
 
+    @extend_schema(
+        description="Отображение списка фильмов",
+        responses={
+            200: AdminListSerialSerializer(),
+        },
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    @extend_schema(
+        description="Отображение конкретного фильма",
+        responses={200: AdminSerialSerializer()},
+    )
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+
     def get_queryset(self):
-        return SerialModel.objects.all().prefetch_related(
-            "country",
-            "producers",
-            "genre",
-            "actors",
-            "reaction",
-        )
+        return self.get_annotated_queryset(SerialModel)
