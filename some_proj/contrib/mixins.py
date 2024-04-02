@@ -1,57 +1,31 @@
 from django.contrib.contenttypes.models import ContentType
+from django.db.models import Prefetch
 from drf_spectacular.utils import extend_schema_field
 from rest_framework import serializers
 from sorl.thumbnail import get_thumbnail
 
 from some_proj.comments.models import CommentModel
 from some_proj.comments.serializers import CommentSerializer
-from some_proj.films.models import FavoriteContent
-from some_proj.films.models import IsContentWatch
-from some_proj.films.models import SeeLateContent
-from some_proj.media_for_kino_card.models import MediaFile
 from some_proj.media_for_kino_card.models import UrlsInMedia
-from some_proj.media_for_kino_card.serializers import DataMediaSerializer
 from some_proj.media_for_kino_card.serializers import UrlsInMediaSerializer
 
 
 class FavoriteMixin:
     @extend_schema_field(bool)
     def get_is_favorite(self, obj):
-        user = self.context.get("request").user
-        content_type = ContentType.objects.get_for_model(obj)
-        return FavoriteContent.objects.filter(
-            content_type=content_type,
-            object_id=obj.pk,
-            user=user,
-        ).exists()
+        return obj.is_favorite
 
 
 class WatchMixin:
-    is_watched = serializers.SerializerMethodField()
-
     @extend_schema_field(bool)
     def get_is_watched(self, obj):
-        user = self.context.get("request").user
-        content_type = ContentType.objects.get_for_model(obj)
-        return IsContentWatch.objects.filter(
-            object_id=obj.id,
-            content_type=content_type,
-            user=user,
-        ).exists()
+        return obj.is_watched
 
 
 class SeeLateMixin:
-    is_see_late = serializers.SerializerMethodField()
-
     @extend_schema_field(bool)
     def get_is_see_late(self, obj):
-        user = self.context.get("request").user
-        content_type = ContentType.objects.get_for_model(obj)
-        return SeeLateContent.objects.filter(
-            object_id=obj.id,
-            content_type=content_type,
-            user=user,
-        ).exists()
+        return obj.is_see_late
 
 
 class CommentMixin:
@@ -117,10 +91,12 @@ class UrlsMixin:
 
     @extend_schema_field(UrlsInMediaSerializer)
     def get_urls(self, obj):
-        content_type = ContentType.objects.get_for_model(obj)
-        media_files = MediaFile.objects.filter(content_type=content_type, object_id=obj.id)
-        urls = UrlsInMedia.objects.filter(media__in=media_files)
-        return UrlsInMediaSerializer(urls, many=True).data
+        media_files = getattr(obj, "media_files", None)
+        if media_files is not None:
+            prefetch_media = Prefetch("media", queryset=UrlsInMedia.objects.select_related("media"))
+            media_files_with_urls = media_files.prefetch_related(prefetch_media)
+            return UrlsInMediaSerializer(media_files_with_urls, many=True).data
+        return []
 
 
 class DataAddedMixin:
@@ -128,11 +104,4 @@ class DataAddedMixin:
 
     @extend_schema_field(str)
     def get_data_added(self, obj):
-        content_type = ContentType.objects.get_for_model(obj)
-        media_files = MediaFile.objects.filter(content_type=content_type, object_id=obj.id).first()
-        serialized_data = DataMediaSerializer(media_files).data
-
-        if serialized_data:
-            data_added_value = serialized_data.get("data_added", "")
-            return str(data_added_value)
-        return ""
+        return str(obj.data_added) if obj.data_added else ""

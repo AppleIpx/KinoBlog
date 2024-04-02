@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from some_proj.contrib.mixins import DataAddedMixin
 from some_proj.contrib.mixins import FavoriteMixin
+from some_proj.contrib.mixins import GetPostersMixin
 from some_proj.contrib.mixins import ReationCountMixin
 from some_proj.films.serializers.film_serializers import DetailedContentSerializer
 from some_proj.media_for_kino_card.utils.shared_files import HTTPRemoverSerializer
@@ -11,11 +12,13 @@ from some_proj.serials.models import SerialModel
 
 class SerialSerializer(
     FavoriteMixin,
+    GetPostersMixin,
     HTTPRemoverSerializer,
     serializers.ModelSerializer,
 ):
     poster = serializers.ImageField()
     is_favorite = serializers.SerializerMethodField()
+    posters = serializers.SerializerMethodField()
 
     class Meta:
         model = SerialModel
@@ -24,11 +27,15 @@ class SerialSerializer(
             "name",
             "release_date",
             "poster",
+            "posters",
             "is_favorite",
             "season",
             "num_serials",
         ]
-        fields_to_process = ["poster"]
+        fields_to_process = [
+            "poster",
+            "posters",
+        ]
 
 
 class ListSerialSerializer(
