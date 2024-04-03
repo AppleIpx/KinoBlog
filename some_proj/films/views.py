@@ -41,15 +41,13 @@ class BaseContentView(
         role = "staff" if user.is_staff else "authenticated" if user.is_authenticated else "anonymous"
         return self.serializer_mapping[role][self.action]
 
-    def get_annotated_queryset(self, model):
+    def get_annotated_queryset(self, model, user, role):
         content_type = ContentType.objects.get_for_model(model)
         media_files_qs = MediaFile.objects.filter(
             content_type=content_type,
             object_id=OuterRef("pk"),
         ).order_by("id")
-        user = self.request.user
-
-        return model.objects.annotate(
+        queryset = model.objects.annotate(
             like_count=Count("reaction", filter=Q(reaction__reaction=True)),
             dislike_count=Count("reaction", filter=Q(reaction__reaction=False)),
             is_favorite=Exists(
@@ -73,8 +71,12 @@ class BaseContentView(
                     user=user,
                 ),
             ),
-            data_added=Subquery(media_files_qs.values("data_added")[:1]),
         )
+        if role == "staff":
+            queryset = queryset.annotate(
+                data_added=Subquery(media_files_qs.values("data_added")[:1]),
+            )
+        return queryset
 
 
 @extend_schema(tags=["Films"])
@@ -97,7 +99,7 @@ class FilmsView(BaseContentView):
     @extend_schema(
         description="Отображение списка фильмов",
         responses={
-            200: ListFilmGuestSerializer(),
+            200: AdminListFilmSerializer(),
         },
     )
     def list(self, request, *args, **kwargs):
@@ -105,10 +107,17 @@ class FilmsView(BaseContentView):
 
     @extend_schema(
         description="Отображение конкретного фильма",
-        responses={200: AdminFilmSerializer()},
+        responses={
+            200: AdminFilmSerializer(),
+        },
     )
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)
 
     def get_queryset(self):
-        return self.get_annotated_queryset(FilmModel)
+        user = self.request.user
+        if user.is_staff:
+            return self.get_annotated_queryset(FilmModel, user, "staff")
+        if user.is_authenticated:
+            return self.get_annotated_queryset(FilmModel, user, "authenticated")
+        return FilmModel.objects.all()

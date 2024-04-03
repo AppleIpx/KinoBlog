@@ -3,7 +3,7 @@ from rest_framework import serializers
 from some_proj.contrib.mixins import DataAddedMixin
 from some_proj.contrib.mixins import FavoriteMixin
 from some_proj.contrib.mixins import GetPostersMixin
-from some_proj.contrib.mixins import ReationCountMixin
+from some_proj.contrib.mixins import ReactionCountMixin
 from some_proj.films.serializers.film_serializers import DetailedContentSerializer
 from some_proj.media_for_kino_card.utils.shared_files import HTTPRemoverSerializer
 from some_proj.serials.models import PhotoSerial
@@ -16,10 +16,6 @@ class SerialSerializer(
     HTTPRemoverSerializer,
     serializers.ModelSerializer,
 ):
-    poster = serializers.ImageField()
-    is_favorite = serializers.SerializerMethodField()
-    posters = serializers.SerializerMethodField()
-
     class Meta:
         model = SerialModel
         fields = [
@@ -40,11 +36,8 @@ class SerialSerializer(
 
 class ListSerialSerializer(
     SerialSerializer,
-    ReationCountMixin,
+    ReactionCountMixin,
 ):
-    dislike_count = serializers.SerializerMethodField()
-    like_count = serializers.SerializerMethodField()
-
     class Meta(SerialSerializer.Meta):
         fields = [
             *SerialSerializer.Meta.fields,
@@ -65,6 +58,8 @@ class SerialGuestSerializer(SerialSerializer):
             if field
             not in [
                 "is_favorite",
+                "like_count",
+                "dislike_count",
             ]
         ]
 
@@ -73,16 +68,6 @@ class ListSerialGuestSerializer(SerialGuestSerializer):
     class Meta(SerialGuestSerializer.Meta):
         fields = [
             *SerialGuestSerializer.Meta.fields,
-        ]
-
-
-class AdminListSerialSerializer(DataAddedMixin, ListSerialSerializer):
-    data_added = serializers.SerializerMethodField()
-
-    class Meta(SerialSerializer.Meta):
-        fields = [
-            *ListSerialSerializer.Meta.fields,
-            "data_added",
         ]
 
 
@@ -135,6 +120,8 @@ class DetailedSerialGuestSerializer(
                     "is_watched",
                     "is_see_late",
                     "is_favorite",
+                    "like_count",
+                    "dislike_count",
                 ]
             ],
             *SerialGuestSerializer.Meta.fields,
@@ -142,10 +129,16 @@ class DetailedSerialGuestSerializer(
 
 
 class AdminSerialSerializer(DataAddedMixin, DetailedSerialSerializer):
-    data_added = serializers.SerializerMethodField()
-
     class Meta(DetailedSerialSerializer.Meta):
         fields = [
             *DetailedSerialSerializer.Meta.fields,
+            "data_added",
+        ]
+
+
+class AdminListSerialSerializer(DataAddedMixin, ListSerialSerializer):
+    class Meta(SerialSerializer.Meta):
+        fields = [
+            *ListSerialSerializer.Meta.fields,
             "data_added",
         ]

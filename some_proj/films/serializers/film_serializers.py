@@ -4,7 +4,7 @@ from some_proj.contrib.mixins import CommentMixin
 from some_proj.contrib.mixins import DataAddedMixin
 from some_proj.contrib.mixins import FavoriteMixin
 from some_proj.contrib.mixins import GetPostersMixin
-from some_proj.contrib.mixins import ReationCountMixin
+from some_proj.contrib.mixins import ReactionCountMixin
 from some_proj.contrib.mixins import SeeLateMixin
 from some_proj.contrib.mixins import UrlsMixin
 from some_proj.contrib.mixins import WatchMixin
@@ -23,9 +23,6 @@ class FilmsSerializer(
     HTTPRemoverSerializer,
     serializers.ModelSerializer,
 ):
-    is_favorite = serializers.SerializerMethodField()
-    posters = serializers.SerializerMethodField()
-
     class Meta:
         model = FilmModel
         fields = [
@@ -45,17 +42,14 @@ class FilmsSerializer(
 
 
 class ListFilmSerializer(
-    ReationCountMixin,
+    ReactionCountMixin,
     FilmsSerializer,
 ):
-    dislike_count = serializers.SerializerMethodField()
-    like_count = serializers.SerializerMethodField()
-
     class Meta(FilmsSerializer.Meta):
         fields = [
             *FilmsSerializer.Meta.fields,
-            "dislike_count",
             "like_count",
+            "dislike_count",
         ]
 
 
@@ -69,6 +63,8 @@ class FilmGuestSerializer(FilmsSerializer):
             if field
             not in [
                 "is_favorite",
+                "like_count",
+                "dislike_count",
             ]
         ]
 
@@ -135,6 +131,8 @@ class DetailedFilmGuestSerializer(DetailedFilmSerializer, FilmGuestSerializer):
                     "is_watched",
                     "is_see_late",
                     "is_favorite",
+                    "like_count",
+                    "dislike_count",
                 ]
             ],
             *FilmGuestSerializer.Meta.fields,
@@ -142,8 +140,6 @@ class DetailedFilmGuestSerializer(DetailedFilmSerializer, FilmGuestSerializer):
 
 
 class AdminFilmSerializer(DataAddedMixin, DetailedFilmSerializer):
-    data_added = serializers.SerializerMethodField()
-
     class Meta(DetailedFilmSerializer.Meta):
         fields = [
             *DetailedFilmSerializer.Meta.fields,
@@ -152,8 +148,6 @@ class AdminFilmSerializer(DataAddedMixin, DetailedFilmSerializer):
 
 
 class AdminListFilmSerializer(DataAddedMixin, ListFilmSerializer):
-    data_added = serializers.SerializerMethodField()
-
     class Meta(FilmsSerializer.Meta):
         fields = [
             *ListFilmSerializer.Meta.fields,
