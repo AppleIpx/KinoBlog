@@ -1,6 +1,8 @@
 from drf_spectacular.utils import extend_schema
 
-from some_proj.films.views import BaseContentView
+from some_proj.films.serializers.shemas_response import ListSerialResponseSerializers
+from some_proj.films.serializers.shemas_response import RetrieveSerialResponseSerializers
+from some_proj.films.utils.base_view import BaseContentView
 from some_proj.serials.models import SerialModel
 from some_proj.serials.serializers import AdminListSerialSerializer
 from some_proj.serials.serializers import AdminSerialSerializer
@@ -30,7 +32,7 @@ class SerialsView(BaseContentView):
     @extend_schema(
         description="Отображение списка фильмов",
         responses={
-            200: AdminListSerialSerializer(),
+            200: ListSerialResponseSerializers(),
         },
     )
     def list(self, request, *args, **kwargs):
@@ -38,7 +40,9 @@ class SerialsView(BaseContentView):
 
     @extend_schema(
         description="Отображение конкретного фильма",
-        responses={200: AdminSerialSerializer()},
+        responses={
+            200: RetrieveSerialResponseSerializers(),
+        },
     )
     def retrieve(self, request, *args, **kwargs):
         return super().retrieve(request, *args, **kwargs)
