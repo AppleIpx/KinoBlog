@@ -1,23 +1,12 @@
 from django.contrib.auth import get_user_model
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.contenttypes.models import ContentType
 from django.db import models
+
+from some_proj.films.models import BaseUserRelation
 
 User = get_user_model()
 
 
-class CommentModel(models.Model):
-    object_id = models.PositiveIntegerField()
-    content_type = models.ForeignKey(
-        ContentType,
-        on_delete=models.CASCADE,
-    )
-    content_object = GenericForeignKey("content_type", "object_id")
-    user = models.ForeignKey(
-        User,
-        verbose_name="Пользователь",
-        on_delete=models.CASCADE,
-    )
+class CommentModel(BaseUserRelation):
     text = models.TextField(
         verbose_name="Комментарий",
     )
