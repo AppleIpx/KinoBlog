@@ -12,7 +12,6 @@ from some_proj.serials.serializers import ListSerialSerializer
 
 @extend_schema(tags=["Serials"])
 class SerialsView(BaseContentView):
-    model = SerialModel
     serializer_mapping = {
         "staff": {
             "list": AdminListSerialSerializer,
@@ -45,4 +44,9 @@ class SerialsView(BaseContentView):
         return super().retrieve(request, *args, **kwargs)
 
     def get_queryset(self):
-        return self.get_annotated_queryset(SerialModel)
+        user = self.request.user
+        if user.is_staff:
+            return self.get_annotated_queryset(SerialModel, user, "staff")
+        if user.is_authenticated:
+            return self.get_annotated_queryset(SerialModel, user, "authenticated")
+        return SerialModel.objects.all()
