@@ -149,6 +149,7 @@ ignore = [
   "RUF003", # Comment contains ambiguous `с`
   "RUF001", # Comment contains ambiguous `H`, `e`
   "RUF002", # Docstring contains ambiguous `с`
+  "PT009",  #  Use a regular `assert` instead of unittest-style `assertEqual`
 ]
 # Allow fix for all enabled rules (when `--fix`) is provided.
 fixable = ["ALL"]

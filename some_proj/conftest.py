@@ -1,5 +1,7 @@
 import pytest
 
+from some_proj.films.models import FilmModel
+from some_proj.films.tests.factories import FilmFactory
 from some_proj.users.models import User
 from some_proj.users.tests.factories import UserFactory
 
@@ -12,3 +14,8 @@ def _media_storage(settings, tmpdir) -> None:
 @pytest.fixture()
 def user(db) -> User:
     return UserFactory()
+
+
+@pytest.fixture()
+def film(db) -> FilmModel:
+    return FilmFactory()
