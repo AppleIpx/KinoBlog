@@ -8,9 +8,6 @@ from some_proj.users.tests.factories import UserFactory
 
 
 class MediaFactory(DjangoModelFactory):
-    class Meta:
-        model = MediaFile
-
     user = SubFactory(UserFactory)
     object_id = Faker("pyint")
     content_type = SubFactory(ContentType)
@@ -18,3 +15,6 @@ class MediaFactory(DjangoModelFactory):
     data_added = Faker("date_of_birth")
     episode = Faker("pyint")
     orig_path_file = Faker("url")
+
+    class Meta:
+        model = MediaFile

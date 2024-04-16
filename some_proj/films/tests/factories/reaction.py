@@ -8,10 +8,10 @@ from some_proj.users.tests.factories import UserFactory
 
 
 class ReactionFactory(DjangoModelFactory):
-    class Meta:
-        model = ReactionModel
-
     user = SubFactory(UserFactory)
     object_id = Faker("pyint")
     content_type = SubFactory(ContentType)
     reaction = Faker("boolean")
+
+    class Meta:
+        model = ReactionModel

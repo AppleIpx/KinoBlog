@@ -5,7 +5,7 @@ from some_proj.films.models import CountryModel
 
 
 class CountryFactory(DjangoModelFactory):
+    name = Faker("name")
+
     class Meta:
         model = CountryModel
-
-    name = Faker("name")

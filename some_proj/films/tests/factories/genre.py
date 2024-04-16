@@ -5,7 +5,7 @@ from some_proj.films.models import GenreModel
 
 
 class GenreFactory(DjangoModelFactory):
+    name = Faker("name")
+
     class Meta:
         model = GenreModel
-
-    name = Faker("name")

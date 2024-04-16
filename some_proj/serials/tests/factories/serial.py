@@ -2,14 +2,16 @@ from factory import Faker
 from factory import post_generation
 from factory.django import DjangoModelFactory
 
-from some_proj.films.models import FilmModel
+from some_proj.serials.models import SerialModel
 
 
-class FilmFactory(DjangoModelFactory):
+class SerialFactory(DjangoModelFactory):
     name = Faker("name")
     trailer = "https://www.youtube.com"
     description = "Описание тестового фильма"
     age_limit = Faker("random_int", min=0, max=21)
+    num_serials = Faker("random_int", min=0, max=20)
+    season = Faker("random_int", min=0, max=20)
     release_date = Faker("date_of_birth")
     duration = Faker("random_int", min=0, max=360)
 
@@ -38,4 +40,4 @@ class FilmFactory(DjangoModelFactory):
         self.actors.add(*extracted)
 
     class Meta:
-        model = FilmModel
+        model = SerialModel

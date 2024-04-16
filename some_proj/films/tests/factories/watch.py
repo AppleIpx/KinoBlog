@@ -9,11 +9,11 @@ from some_proj.users.tests.factories import UserFactory
 
 
 class WatchFactory(DjangoModelFactory):
-    class Meta:
-        model = IsContentWatch
-
     user = SubFactory(UserFactory)
     object_id = Faker("pyint")
     content_type = SubFactory(ContentType)
     minutes = Faker("pyint")
     media = SubFactory(MediaFactory)
+
+    class Meta:
+        model = IsContentWatch
