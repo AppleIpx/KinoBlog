@@ -19,7 +19,7 @@ class TestUserAdmin:
 
     def test_search(self, admin_client):
         url = reverse("admin:users_user_changelist")
-        response = admin_client.get(url, data={"q": "test"})
+        response = admin_client.get(url, data={"q": "tests"})
         assert response.status_code == HTTPStatus.OK
 
     def test_add(self, admin_client):

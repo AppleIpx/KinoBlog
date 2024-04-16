@@ -12,9 +12,9 @@ def start_process_media_files_local(instance):
     qualities = Quality.objects.all()
 
     # определние объекта: Фильм или Сериал
-    content_name = check_instance(instance)
+    content_name, file_name = check_instance(instance)
 
-    # Определение соотношения разрешения оригинального фильма
+    # Определение соотношения разрешения оригинального фильма или сериала
     # получение отношения ширины к высоте исходного кадра
     correlation_value = get_correlation(orig_file_path)
     for quality in qualities:

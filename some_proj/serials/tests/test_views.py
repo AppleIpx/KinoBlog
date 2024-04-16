@@ -11,25 +11,25 @@ from some_proj.films.tests.utils import check_anonymous_retrieve_fields
 from some_proj.films.tests.utils import check_auth_user_list_fields
 from some_proj.films.tests.utils import check_auth_user_not_list_fields
 from some_proj.films.tests.utils import check_auth_user_retrieve_fields
-from some_proj.films.tests.utils.base_test import TestBaseFilm
+from some_proj.serials.tests.utils.base_test_serial import TestBaseSerial
 
 
 @pytest.mark.django_db()
-class TestFilmsView(TestBaseFilm):
+class TestSerialsView(TestBaseSerial):
     def _get_list_response(self, user=None):
         if user:
             self.client.force_authenticate(user=user)
-        response = self.client.get(reverse("api:films-list"))
+        response = self.client.get(reverse("api:serials-list"))
         check_200_status(response)
         return response
 
-    def _get_retrieve_response(self, test_film_id, user=None):
+    def _get_retrieve_response(self, test_serial_id, user=None):
         if user:
             self.client.force_authenticate(user=user)
         response = self.client.get(
             reverse(
-                "api:films-detail",
-                kwargs={"pk": test_film_id},
+                "api:serials-detail",
+                kwargs={"pk": test_serial_id},
             ),
         )
         check_200_status(response)
@@ -41,9 +41,9 @@ class TestFilmsView(TestBaseFilm):
         check_admin_not_list_fields(self, response)
 
     def test_admin_retrieve_fields(self):
-        test_film_id = self.test_film.id
+        test_serial_id = self.test_serial.id
         response = self._get_retrieve_response(
-            test_film_id,
+            test_serial_id,
             user=self.test_admin,
         )
         check_admin_retrieve_fields(self, response)
@@ -54,9 +54,9 @@ class TestFilmsView(TestBaseFilm):
         check_auth_user_not_list_fields(self, response)
 
     def test_auth_user_retrieve_fields(self):
-        test_film_id = self.test_film.id
+        test_serial_id = self.test_serial.id
         response = self._get_retrieve_response(
-            test_film_id,
+            test_serial_id,
             user=self.test_auth_user,
         )
         check_auth_user_retrieve_fields(self, response)
@@ -67,6 +67,6 @@ class TestFilmsView(TestBaseFilm):
         check_anonymous_not_list_fields(self, response)
 
     def test_anonymous_retrieve_fields(self):
-        test_film_id = self.test_film.id
-        response = self._get_retrieve_response(test_film_id)
+        test_serial_id = self.test_serial.id
+        response = self._get_retrieve_response(test_serial_id)
         check_anonymous_retrieve_fields(self, response)

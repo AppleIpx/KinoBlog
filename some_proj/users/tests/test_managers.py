@@ -31,7 +31,7 @@ class TestUserManager:
 
     def test_create_superuser_username_ignored(self):
         user = User.objects.create_superuser(
-            email="test@example.com",
+            email="tests@example.com",
             password="something-r@nd0m!",  # noqa: S106
         )
         assert user.username is None
