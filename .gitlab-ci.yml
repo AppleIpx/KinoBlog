@@ -1,6 +1,6 @@
 #stages:
 #  - lint
-#  - test
+#  - tests
 
 variables:
   POSTGRES_USER: 'some_proj'
@@ -23,7 +23,7 @@ precommit:
     - pre-commit run --show-diff-on-failure --color=always --all-files
 
 pytest:
-  stage: test
+  stage: tests
   image: docker/compose:1.29.2
   tags:
     - docker
