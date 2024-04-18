@@ -1,21 +1,21 @@
 import pytest
 from django.urls import reverse
 
-from some_proj.films.models import FilmModel
-from some_proj.films.tests.utils import TestBaseFilm
 from some_proj.films.tests.utils import check_200_status
 from some_proj.films.tests.utils.watch.create_watch import create_watch
 from some_proj.films.tests.utils.watch.delete_watch import delete_watch
+from some_proj.serials.models import SerialModel
+from some_proj.serials.tests.utils.base_test_serial import TestBaseSerial
 
 
 @pytest.mark.django_db()
-class TestWatchFilms(TestBaseFilm):
+class TestWatchFilms(TestBaseSerial):
     def _check_watch_status(self, user, expected_value):
         self.client.force_authenticate(user=user)
         response = self.client.get(
             reverse(
-                "api:films-detail",
-                kwargs={"pk": self.test_film.id},
+                "api:serials-detail",
+                kwargs={"pk": self.test_serial.id},
             ),
         )
         check_200_status(response)
@@ -31,8 +31,8 @@ class TestWatchFilms(TestBaseFilm):
     def test_check_add_admin_watch(self):
         create_watch(
             self.test_admin,
-            self.test_film.id,
-            FilmModel,
+            self.test_serial.id,
+            SerialModel,
         )
         self._check_watch_status(
             user=self.test_admin,
@@ -42,8 +42,8 @@ class TestWatchFilms(TestBaseFilm):
     def test_check_delete_admin_watch(self):
         delete_watch(
             self.test_admin,
-            self.test_film.id,
-            FilmModel,
+            self.test_serial.id,
+            SerialModel,
         )
         self._check_watch_status(
             user=self.test_admin,
@@ -59,8 +59,8 @@ class TestWatchFilms(TestBaseFilm):
     def test_check_add_auth_user_watch(self):
         create_watch(
             self.test_auth_user,
-            self.test_film.id,
-            FilmModel,
+            self.test_serial.id,
+            SerialModel,
         )
         self._check_watch_status(
             user=self.test_auth_user,
@@ -70,8 +70,8 @@ class TestWatchFilms(TestBaseFilm):
     def test_check_delete_auth_user_watch(self):
         delete_watch(
             self.test_auth_user,
-            self.test_film.id,
-            FilmModel,
+            self.test_serial.id,
+            SerialModel,
         )
         self._check_watch_status(
             user=self.test_auth_user,

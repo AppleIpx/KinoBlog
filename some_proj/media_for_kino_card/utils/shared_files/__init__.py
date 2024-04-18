@@ -4,5 +4,6 @@ from .clean_poster import clean  # noqa: F401
 from .create_or_update_urls_media import create_add_links  # noqa: F401
 from .delete_https_from_photo import HTTPRemoverSerializer  # noqa: F401
 from .generate_name_poster import generate_filename_photos  # noqa: F401
+from .generate_output_folder import generate_path  # noqa: F401
 from .media_check import check_change_urls as check_urls  # noqa: F401
 from .updating_fields_media import updating_fields as update_media  # noqa: F401

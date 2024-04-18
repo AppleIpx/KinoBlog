@@ -2,13 +2,13 @@ from rest_framework.test import APITestCase
 
 from some_proj.films.tests.factories import ActorFactory
 from some_proj.films.tests.factories import CountryFactory
-from some_proj.films.tests.factories import FilmFactory
 from some_proj.films.tests.factories import GenreFactory
 from some_proj.films.tests.factories import ProducerFactory
+from some_proj.serials.tests.factories.serial import SerialFactory
 from some_proj.users.tests.factories import UserFactory
 
 
-class TestBaseFilm(APITestCase):
+class TestBaseSerial(APITestCase):
     base_fields = [
         "id",
         "poster",
@@ -17,6 +17,8 @@ class TestBaseFilm(APITestCase):
         "release_date",
         "duration",
         "age_limit",
+        "season",
+        "num_serials",
     ]
     list_fields = [
         "is_favorite",
@@ -44,7 +46,7 @@ class TestBaseFilm(APITestCase):
         genre = GenreFactory()
         actors = ActorFactory()
         producers = ProducerFactory()
-        cls.test_film = FilmFactory.create(
+        cls.test_serial = SerialFactory.create(
             country=[country],
             genre=[genre],
             actors=[actors],

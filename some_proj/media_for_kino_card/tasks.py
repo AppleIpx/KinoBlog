@@ -4,6 +4,7 @@ from celery import shared_task
 from some_proj.media_for_kino_card.S3.s3_client import s3_current_client
 from some_proj.media_for_kino_card.utils.s3_files import extract_name
 from some_proj.media_for_kino_card.utils.shared_files import check_or_create_package
+from some_proj.media_for_kino_card.utils.shared_files import generate_path
 
 
 @shared_task
@@ -29,7 +30,7 @@ def get_video_stream(filepath):
 
 @shared_task
 def recoding_files(orig_file_path, content_name, quality, correlation):
-    output_folder = f"some_proj/media/videos/{content_name}"
+    output_folder = generate_path(content_name)
     # проверка на существующую папку
     check_or_create_package(output_folder)
     quality_params = {
