@@ -1,16 +1,38 @@
 from django.contrib.auth import get_user_model
 from django.db import models
-from modelcluster.fields import ParentalKey
 from wagtail.admin.panels import FieldPanel
 from wagtail.snippets.models import register_snippet
-
-from some_proj.blog.models import BlogPage
 
 User = get_user_model()
 
 
 @register_snippet
-class AuthorBlog(User):
+class Profession(models.Model):
+    name = models.CharField(
+        max_length=155,
+        verbose_name="Профессия",
+        help_text="Название профессии",
+    )
+    panels = [
+        FieldPanel("name"),
+    ]
+
+    class Meta:
+        verbose_name = "профессия"
+        verbose_name_plural = "профессии"
+
+    def __str__(self):
+        return self.name
+
+
+@register_snippet
+class AuthorBlog(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name="Автор",
+        help_text="Выберите пользователя",
+    )
     first_name = models.CharField(
         max_length=250,
         verbose_name="Имя",
@@ -33,18 +55,35 @@ class AuthorBlog(User):
         on_delete=models.SET_NULL,
         related_name="+",
     )
-    block_post = ParentalKey(
-        BlogPage,
+    profession = models.ForeignKey(
+        Profession,
+        verbose_name="Профессия",
         on_delete=models.CASCADE,
-        related_name="authors",
+        help_text="Выберите профессию",
+        blank=True,
+        null=True,
+    )
+    work_experience = models.PositiveSmallIntegerField(
+        verbose_name="Опыт работы, единица измерения (год)",
+        blank=True,
+        null=True,
     )
     panels = [
+        FieldPanel("user"),
         FieldPanel("first_name"),
         FieldPanel("last_name"),
         FieldPanel("author_email"),
+        FieldPanel("profession"),
+        FieldPanel("work_experience"),
         FieldPanel("author_image"),
-        FieldPanel("block_post"),
     ]
 
+    class Meta:
+        verbose_name = "автор"
+        verbose_name_plural = "авторы"
+
     def __str__(self):
-        return f"{self.name} {self.last_name}"
+        return_field = f"{self.first_name} {self.last_name}"
+        if self.profession is None:
+            return return_field
+        return f"{return_field} {self.profession.name}"

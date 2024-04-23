@@ -2,7 +2,7 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import include
+from django.urls import include, re_path
 from django.urls import path
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
@@ -47,10 +47,7 @@ urlpatterns += [
         SpectacularSwaggerView.as_view(url_name="api-schema"),
         name="api-docs",
     ),
-    path("documents/", include(wagtaildocs_urls)),
-    path("api/v2/", api_router.urls),
     # Ensure that the api_router line appears above the default Wagtail page serving route
-    path("", include(wagtail_urls)),
 ]
 
 if settings.DEBUG:

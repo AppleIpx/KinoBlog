@@ -1,6 +1,8 @@
+from django import forms
 from django.db import models
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from modelcluster.fields import ParentalKey
+from modelcluster.fields import ParentalManyToManyField
 from taggit.models import TaggedItemBase
 from wagtail.admin.panels import FieldPanel
 from wagtail.admin.panels import InlinePanel
@@ -15,6 +17,7 @@ from wagtail.snippets.blocks import SnippetChooserBlock
 
 from some_proj.blog.snippets import FilmBlogModel
 from some_proj.blog.snippets import SerialBlogModel
+from some_proj.blog.snippets.author_snippet import AuthorBlog
 from some_proj.media_for_kino_card.utils.shared_files import generate_filename_photos
 
 
@@ -30,6 +33,11 @@ class BlogPage(Page):
     date = models.DateField("Дата публикации")
     tag = ClusterTaggableManager(
         through=BlogTagPage,
+        blank=True,
+    )
+    authors = ParentalManyToManyField(
+        AuthorBlog,
+        verbose_name="Автор",
         blank=True,
     )
     body = StreamField(
@@ -101,7 +109,7 @@ class BlogPage(Page):
         *Page.content_panels,
         FieldPanel("title"),
         FieldPanel("date"),
-        InlinePanel("authors", label="Автор"),
+        FieldPanel("authors", widget=forms.CheckboxSelectMultiple),
         FieldPanel("tag"),
         FieldPanel("body"),
         InlinePanel("slides", label="слайд"),
