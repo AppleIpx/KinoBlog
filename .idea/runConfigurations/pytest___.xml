@@ -3,6 +3,12 @@
     <module name="some_proj" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
+    <envs>
+      <env name="CELERY_BROKER_URL" value="redis://localhost:6379/0" />
+      <env name="DATABASE_URL" value="postgres://postgres:1234@127.0.0.1:5432/all_online" />
+      <env name="MEDIA_URL" value="/media/" />
+      <env name="USE_DOCKER" value="no" />
+    </envs>
     <option name="SDK_HOME" value="" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
     <option name="IS_MODULE_SDK" value="true" />
