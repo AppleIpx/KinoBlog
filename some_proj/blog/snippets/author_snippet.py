@@ -55,18 +55,11 @@ class AuthorBlog(models.Model):
         on_delete=models.SET_NULL,
         related_name="+",
     )
-    profession = models.ForeignKey(
+    profession = models.ManyToManyField(
         Profession,
         verbose_name="Профессия",
-        on_delete=models.CASCADE,
         help_text="Выберите профессию",
         blank=True,
-        null=True,
-    )
-    work_experience = models.PositiveSmallIntegerField(
-        verbose_name="Опыт работы, единица измерения (год)",
-        blank=True,
-        null=True,
     )
     panels = [
         FieldPanel("user"),
@@ -74,7 +67,6 @@ class AuthorBlog(models.Model):
         FieldPanel("last_name"),
         FieldPanel("author_email"),
         FieldPanel("profession"),
-        FieldPanel("work_experience"),
         FieldPanel("author_image"),
     ]
 
@@ -83,7 +75,4 @@ class AuthorBlog(models.Model):
         verbose_name_plural = "авторы"
 
     def __str__(self):
-        return_field = f"{self.first_name} {self.last_name}"
-        if self.profession is None:
-            return return_field
-        return f"{return_field} {self.profession.name}"
+        return f"{self.first_name} {self.last_name}"

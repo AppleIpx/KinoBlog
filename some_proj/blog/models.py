@@ -17,6 +17,7 @@ from wagtail.snippets.blocks import SnippetChooserBlock
 
 from some_proj.blog.snippets import FilmBlogModel
 from some_proj.blog.snippets import SerialBlogModel
+from some_proj.blog.snippets import SlidesModel
 from some_proj.blog.snippets.author_snippet import AuthorBlog
 from some_proj.media_for_kino_card.utils.shared_files import generate_filename_photos
 
@@ -88,7 +89,7 @@ class BlogPage(Page):
             (
                 "slides",
                 SnippetChooserBlock(
-                    SerialBlogModel,
+                    SlidesModel,
                     label="Кадры из фильма/сериала",
                     required=False,
                 ),

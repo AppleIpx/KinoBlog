@@ -9,7 +9,7 @@ class AuthorBlogSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     author_email = serializers.EmailField(read_only=True)
     author_image = serializers.ImageField(required=False)
-    profession = ProfessionSerializer()
+    profession = ProfessionSerializer(many=True)
 
     class Meta:
         model = AuthorBlog
