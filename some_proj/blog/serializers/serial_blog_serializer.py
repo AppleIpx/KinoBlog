@@ -11,3 +11,4 @@ class WidgetSerialBlogSerializer(DetailedContentSerializer):
             "season",
             "num_serials",
         ]
+        fields_to_process = ["poster"]

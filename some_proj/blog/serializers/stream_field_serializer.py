@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from wagtail.blocks import StreamValue
 
+from some_proj.blog.serializers.cadrs_serializer import CadrsBlogSerializer
 from some_proj.blog.serializers.embed_serializer import EmbedBlockSerializer
 from some_proj.blog.serializers.film_blog_serializer import WidgetFilmBlogSerializer
 from some_proj.blog.serializers.image_seializer import CustomImageBlockSerializer
@@ -14,6 +15,7 @@ class StreamFieldSerializer(serializers.Field):
         "content": lambda block: EmbedBlockSerializer(block.value).data,
         "film": lambda block: WidgetFilmBlogSerializer(block.value, read_only=True).data,
         "serial": lambda block: WidgetSerialBlogSerializer(block.value, read_only=True).data,
+        "cadrs": lambda block: CadrsBlogSerializer(block.value, read_only=True).data,
     }
 
     def to_representation(self, value):

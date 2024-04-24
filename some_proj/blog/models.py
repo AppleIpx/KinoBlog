@@ -15,9 +15,9 @@ from wagtail.models import Page
 from wagtail.search import index
 from wagtail.snippets.blocks import SnippetChooserBlock
 
+from some_proj.blog.snippets import CadrsModel
 from some_proj.blog.snippets import FilmBlogModel
 from some_proj.blog.snippets import SerialBlogModel
-from some_proj.blog.snippets import SlidesModel
 from some_proj.blog.snippets.author_snippet import AuthorBlog
 from some_proj.media_for_kino_card.utils.shared_files import generate_filename_photos
 
@@ -87,10 +87,11 @@ class BlogPage(Page):
                 ),
             ),
             (
-                "slides",
+                "cadrs",
                 SnippetChooserBlock(
-                    SlidesModel,
+                    CadrsModel,
                     label="Кадры из фильма/сериала",
+                    icon="image",
                     required=False,
                 ),
             ),

@@ -71,13 +71,14 @@ class ListSerialGuestSerializer(SerialGuestSerializer):
         ]
 
 
-class PhotoSerialSerializer(serializers.ModelSerializer):
+class PhotoSerialSerializer(HTTPRemoverSerializer, serializers.ModelSerializer):
     class Meta:
         model = PhotoSerial
         fields = [
             "id",
             "photo_serial",
         ]
+        fields_to_process = ["photo_serial"]
 
 
 class DetailedSerialSerializer(

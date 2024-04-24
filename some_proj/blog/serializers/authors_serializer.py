@@ -19,7 +19,6 @@ class AuthorBlogSerializer(serializers.ModelSerializer):
             "last_name",
             "user",
             "profession",
-            "work_experience",
             "author_email",
             "author_image",
         ]

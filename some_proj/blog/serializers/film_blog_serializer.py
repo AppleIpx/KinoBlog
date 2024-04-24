@@ -9,3 +9,4 @@ class WidgetFilmBlogSerializer(DetailedContentSerializer):
         fields = [
             *DefaultFields,
         ]
+        fields_to_process = ["poster"]
