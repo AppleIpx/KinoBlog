@@ -5,21 +5,16 @@ from modelcluster.fields import ParentalKey
 from modelcluster.fields import ParentalManyToManyField
 from taggit.models import TaggedItemBase
 from wagtail.admin.panels import FieldPanel
-from wagtail.admin.panels import InlinePanel
 from wagtail.blocks import RichTextBlock
 from wagtail.embeds.blocks import EmbedBlock
 from wagtail.fields import StreamField
-from wagtail.images.blocks import ImageChooserBlock
-from wagtail.models import Orderable
 from wagtail.models import Page
 from wagtail.search import index
-from wagtail.snippets.blocks import SnippetChooserBlock
 
-from some_proj.blog.snippets import CadrsModel
-from some_proj.blog.snippets import FilmBlogModel
-from some_proj.blog.snippets import SerialBlogModel
+from some_proj.blog.models.custom_image import CustomImageChoose
+from some_proj.blog.models.film_blog import FilmBlog
+from some_proj.blog.models.serial_blog import SerialBlog
 from some_proj.blog.snippets.author_snippet import AuthorBlog
-from some_proj.media_for_kino_card.utils.shared_files import generate_filename_photos
 
 
 class BlogTagPage(TaggedItemBase):
@@ -51,16 +46,7 @@ class BlogPage(Page):
                     help_text="Введите описание",
                 ),
             ),
-            (
-                "image",
-                ImageChooserBlock(
-                    template="blocks/imgblock.html",
-                    label="Изображение",
-                    icon="image",
-                    help_text="Загрузите изображение",
-                    upload_to=generate_filename_photos,
-                ),
-            ),
+            ("images", CustomImageChoose()),
             (
                 "content",
                 EmbedBlock(
@@ -68,33 +54,8 @@ class BlogPage(Page):
                     help_text="Пример ссылки: https://www.youtube.com/watch?v=5mM0fX_kKCU",
                 ),
             ),
-            (
-                "film",
-                SnippetChooserBlock(
-                    FilmBlogModel,
-                    label="Фильм",
-                    required=False,
-                    help_text="Укажите фильм",
-                ),
-            ),
-            (
-                "serial",
-                SnippetChooserBlock(
-                    SerialBlogModel,
-                    label="Сериал",
-                    required=False,
-                    help_text="Укажите сериал",
-                ),
-            ),
-            (
-                "cadrs",
-                SnippetChooserBlock(
-                    CadrsModel,
-                    label="Кадры из фильма/сериала",
-                    icon="image",
-                    required=False,
-                ),
-            ),
+            ("film", FilmBlog()),
+            ("serial", SerialBlog()),
         ],
         use_json_field=True,
         blank=True,
@@ -114,7 +75,6 @@ class BlogPage(Page):
         FieldPanel("authors", widget=forms.CheckboxSelectMultiple),
         FieldPanel("tag"),
         FieldPanel("body"),
-        InlinePanel("slides", label="слайд"),
     ]
 
     subpage_types = []
@@ -123,24 +83,3 @@ class BlogPage(Page):
     class Meta:
         verbose_name = "пост"
         verbose_name_plural = "посты"
-
-
-class BlockImages(Orderable):
-    caption = models.CharField(
-        max_length=250,
-        verbose_name="Текст слайда",
-        blank=True,
-    )
-    figure = models.ForeignKey(
-        "wagtailimages.Image",
-        on_delete=models.SET_NULL,
-        related_name="+",
-        verbose_name="Картинка",
-        blank=True,
-        null=True,
-    )
-    blog = ParentalKey(
-        BlogPage,
-        related_name="slides",
-        on_delete=models.CASCADE,
-    )
