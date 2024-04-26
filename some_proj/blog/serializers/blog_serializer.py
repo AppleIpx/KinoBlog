@@ -2,8 +2,8 @@ from rest_framework import serializers
 
 from some_proj.blog.models import BlogPage
 from some_proj.blog.serializers import AuthorBlogSerializer
-from some_proj.blog.serializers import BlogTagPageSerializer
 from some_proj.blog.serializers.stream_field_serializer import StreamFieldSerializer
+from some_proj.blog.serializers.tags_serializer import BlogTagPageSerializer
 
 
 class ListBlogSerializer(serializers.ModelSerializer):
@@ -24,14 +24,9 @@ class ListBlogSerializer(serializers.ModelSerializer):
 
 class DetailBlogSerializer(ListBlogSerializer):
     body = StreamFieldSerializer()
-    slides = serializers.SerializerMethodField()
-
-    def get_slides(self, obj):
-        pass
 
     class Meta(ListBlogSerializer.Meta):
         fields = [
             *ListBlogSerializer.Meta.fields,
             "body",
-            "slides",
         ]

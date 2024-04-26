@@ -17,13 +17,17 @@ DefaultPanels = [
 ]
 
 DefaultFields = [
+    "id",
     "name",
     "poster",
-    "age_limit",
     "country",
     "genre",
+    "description",
+    "trailer",
+    "cadrs",
+    "actors",
     "duration",
-    "release_date",
+    "producers",
 ]
 
 

@@ -206,7 +206,7 @@ class PhotoFilm(models.Model):
         verbose_name_plural = "кадры из фильмов"
 
     def __str__(self):
-        return f"кадр из {self.film.name}"
+        return f"Кадр из {self.film.name}"
 
 
 class FavoriteContent(BaseUserRelation):

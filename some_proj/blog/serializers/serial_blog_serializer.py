@@ -1,11 +1,14 @@
-from some_proj.blog.snippets import SerialBlogModel
 from some_proj.blog.snippets.film_snippet import DefaultFields
 from some_proj.films.serializers.film_serializers import DetailedContentSerializer
+from some_proj.serials.models import SerialModel
+from some_proj.serials.serializers import CadrsSerialSerializer
 
 
-class WidgetSerialBlogSerializer(DetailedContentSerializer):
+class SerialBlogSerializer(DetailedContentSerializer):
+    cadrs = CadrsSerialSerializer(many=True)
+
     class Meta:
-        model = SerialBlogModel
+        model = SerialModel
         fields = [
             *DefaultFields,
             "season",

@@ -71,7 +71,7 @@ class ListSerialGuestSerializer(SerialGuestSerializer):
         ]
 
 
-class PhotoSerialSerializer(HTTPRemoverSerializer, serializers.ModelSerializer):
+class CadrsSerialSerializer(HTTPRemoverSerializer, serializers.ModelSerializer):
     class Meta:
         model = PhotoSerial
         fields = [
@@ -85,7 +85,7 @@ class DetailedSerialSerializer(
     DetailedContentSerializer,
     ListSerialSerializer,
 ):
-    cadrs = PhotoSerialSerializer(many=True)
+    cadrs = CadrsSerialSerializer(many=True)
 
     class Meta(ListSerialSerializer.Meta):
         fields = [

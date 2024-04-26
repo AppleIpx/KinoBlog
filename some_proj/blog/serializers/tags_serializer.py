@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from some_proj.blog.models import BlogTagPage
+from some_proj.blog.models.blog_page import BlogTagPage
 
 
 class BlogTagPageSerializer(serializers.ModelSerializer):
