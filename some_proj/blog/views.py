@@ -31,4 +31,4 @@ class BlockPageView(
         return super().retrieve(request, *args, **kwargs)
 
     def get_queryset(self):
-        return BlogPage.objects.all()
+        return BlogPage.objects.prefetch_related("tags")

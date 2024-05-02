@@ -8,7 +8,7 @@ from some_proj.blog.serializers.tags_serializer import BlogTagPageSerializer
 
 class ListBlogSerializer(serializers.ModelSerializer):
     date = serializers.DateField(format="%A %d %B %Y")
-    tags = BlogTagPageSerializer(source="tags.all", many=True)
+    tags = BlogTagPageSerializer(many=True)
     authors = AuthorBlogSerializer(many=True)
 
     class Meta:

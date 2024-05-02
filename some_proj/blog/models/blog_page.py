@@ -21,13 +21,13 @@ class BlogTagPage(TaggedItemBase):
     content_object = ParentalKey(
         "blog.BlogPage",
         on_delete=models.CASCADE,
-        related_name="tags",
+        related_name="tagged_items",
     )
 
 
 class BlogPage(Page):
     date = models.DateField("Дата публикации")
-    tag = ClusterTaggableManager(
+    tags = ClusterTaggableManager(
         through=BlogTagPage,
         blank=True,
     )
@@ -64,8 +64,7 @@ class BlogPage(Page):
     search_fields = [
         *Page.search_fields,
         index.SearchField("title"),
-        index.SearchField("body"),
-        index.SearchField("tag"),
+        index.SearchField("tags"),
     ]
 
     content_panels = [
@@ -73,7 +72,7 @@ class BlogPage(Page):
         FieldPanel("title"),
         FieldPanel("date"),
         FieldPanel("authors", widget=forms.CheckboxSelectMultiple),
-        FieldPanel("tag"),
+        FieldPanel("tags"),
         FieldPanel("body"),
     ]
 
