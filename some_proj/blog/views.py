@@ -1,9 +1,11 @@
+from django.db.models import Prefetch
 from rest_framework import mixins
 from rest_framework import viewsets
 
 from some_proj.blog.models import BlogPage
 from some_proj.blog.serializers.blog_serializer import DetailBlogSerializer
 from some_proj.blog.serializers.blog_serializer import ListBlogSerializer
+from some_proj.blog.snippets.author_snippet import AuthorBlog
 
 
 class BlockPageView(
@@ -31,4 +33,12 @@ class BlockPageView(
         return super().retrieve(request, *args, **kwargs)
 
     def get_queryset(self):
-        return BlogPage.objects.all()
+        author_image_prefetch = Prefetch(
+            "authors__author_image",
+            queryset=AuthorBlog.objects.all(),
+        )
+        return BlogPage.objects.prefetch_related(
+            "tags",
+            "authors",
+            author_image_prefetch,
+        )
