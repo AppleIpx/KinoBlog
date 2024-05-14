@@ -26,10 +26,6 @@ class SerialSerializer(
             "season",
             "num_serials",
         ]
-        fields_to_process = [
-            "poster",
-            "posters",
-        ]
 
 
 class ListSerialSerializer(
@@ -76,7 +72,6 @@ class CadrsSerialSerializer(serializers.ModelSerializer):
             "id",
             "photo_serial",
         ]
-        fields_to_process = ["photo_serial"]
 
 
 class DetailedSerialSerializer(

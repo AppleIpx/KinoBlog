@@ -8,8 +8,6 @@ from wagtail.images.models import AbstractImage
 from wagtail.images.models import AbstractRendition
 from wagtail.images.models import Image
 
-from some_proj.contrib.mixins.add_bucket_in_url import AddBucketMixin
-from some_proj.contrib.mixins.delete_http_in_url import DeleteHttpInUrlMixin
 from some_proj.media_for_kino_card.utils.shared_files import generate_filename_photos
 
 
@@ -39,8 +37,6 @@ class CustomRendition(AbstractRendition):
 
 
 class CustomImageChoose(
-    DeleteHttpInUrlMixin,
-    AddBucketMixin,
     StructBlock,
 ):
     image = ListBlock(
@@ -70,11 +66,7 @@ class CustomImageChoose(
         title = value["title"]
         for image in value["image"]:
             image_data = ImageRenditionField("max-1920x1080|format-jpeg").to_representation(image)
-            image_data_url = self.delete_http_in_url(image_data["url"])
-            image_data_url = self.add_bucket_name(image_data_url, "photos")
-            image_data["url"] = image_data_url
-            image_data["full_url"] = image_data_url
-
+            image_data["url"] = image_data["url"]
             images.append(image_data)
 
         representation.update(
