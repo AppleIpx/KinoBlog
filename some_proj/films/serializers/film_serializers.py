@@ -19,7 +19,6 @@ from some_proj.films.serializers import ProducerSerializer
 class FilmsSerializer(
     FavoriteMixin,
     GetPostersMixin,
-    # HTTPRemoverSerializer,
     serializers.ModelSerializer,
 ):
     class Meta:
