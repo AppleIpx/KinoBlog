@@ -14,13 +14,11 @@ from some_proj.films.serializers import CadrsFilmSerializer
 from some_proj.films.serializers import CountrySerializer
 from some_proj.films.serializers import GenreSerializer
 from some_proj.films.serializers import ProducerSerializer
-from some_proj.media_for_kino_card.utils.shared_files import HTTPRemoverSerializer
 
 
 class FilmsSerializer(
     FavoriteMixin,
     GetPostersMixin,
-    HTTPRemoverSerializer,
     serializers.ModelSerializer,
 ):
     class Meta:
@@ -77,7 +75,6 @@ class ListFilmGuestSerializer(FilmGuestSerializer):
 
 
 class DetailedContentSerializer(
-    HTTPRemoverSerializer,
     WatchMixin,
     SeeLateMixin,
     CommentMixin,

@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=226, verbose_name='Название')),
-                ('poster', sorl.thumbnail.fields.ImageField(blank=True, upload_to=some_proj.media_for_kino_card.utils.shared_files.generate_name_poster.generate_filename_photos, validators=[some_proj.media_for_kino_card.utils.shared_files.clean_poster.clean], verbose_name='Постер')),
+                ('poster', sorl.thumbnail.fields.ImageField(blank=True, upload_to=some_proj.media_for_kino_card.utils.shared_files.generate_name_poster.generate_filename_photos, validators=[some_proj.media_for_kino_card.utils.shared_files.clean_poster.poster_validator], verbose_name='Постер')),
                 ('trailer', models.CharField(max_length=500, verbose_name='Ссылка на трейлер из youtube')),
                 ('description', models.TextField(verbose_name='Описание')),
                 ('age_limit', models.PositiveSmallIntegerField(verbose_name='Возрастное ограничение')),

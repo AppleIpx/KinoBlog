@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from PIL import Image
 
 
-def clean(poster):
+def poster_validator(poster):
     if poster:
         image = Image.open(BytesIO(poster.read()))
         width, height = image.size
