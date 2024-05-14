@@ -4,12 +4,13 @@
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
     <envs>
+      <env name="AWS_ACCESS_KEY_ID" value="intern-24-izvekov" />
       <env name="AWS_S3_ACCESS_KEY_ID" value="intern-24-izvekov" />
-      <env name="AWS_S3_CUSTOM_DOMAIN" value="https://minio.space.rdclr.ru" />
+      <env name="AWS_S3_ENDPOINT_URL" value="https://minio.space.rdclr.ru" />
       <env name="AWS_S3_MAX_MEMORY_SIZE" value="100_000_000_000_000" />
       <env name="AWS_S3_REGION_NAME" value="eu-west-2" />
-      <env name="AWS_S3_STORAGE_BUCKET_NAME" value="intern-24-izvekov" />
       <env name="AWS_S3_SECRET_ACCESS_KEY" value="PiJkvnvnvvBRKwM7Uz86UFy" />
+      <env name="AWS_S3_STORAGE_BUCKET_NAME" value="intern-24-izvekov" />
       <env name="CELERY_BROKER_URL" value="redis://localhost:6379/0" />
       <env name="DATABASE_URL" value="postgres://postgres:1234@127.0.0.1:5432/all_online" />
       <env name="DJANGO_SETTINGS_MODULE" value="config.settings.local" />
