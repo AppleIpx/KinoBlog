@@ -33,10 +33,6 @@ class FilmsSerializer(
             "is_favorite",
             "age_limit",
         ]
-        fields_to_process = [
-            "poster",
-            "posters",
-        ]
 
 
 class ListFilmSerializer(
