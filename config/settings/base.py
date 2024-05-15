@@ -24,7 +24,7 @@ DEBUG = env.bool("DJANGO_DEBUG", False)
 # In Windows, this must be set to your system time zone.
 TIME_ZONE = "Europe/Moscow"
 # https://docs.djangoproject.com/en/dev/ref/settings/#language-code
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "ru-ru"
 # https://docs.djangoproject.com/en/dev/ref/settings/#languages
 # from django.utils.translation import gettext_lazy as _
 # LANGUAGES = [
@@ -70,6 +70,24 @@ DJANGO_APPS = [
     "django.forms",
     "simple_history",
 ]
+WAGTAIL = [
+    "some_proj.home",
+    # "blogging.search",
+    "wagtail.contrib.forms",
+    "wagtail.contrib.redirects",
+    "wagtail.embeds",
+    "wagtail.sites",
+    "wagtail.users",
+    "wagtail.snippets",
+    "wagtail.documents",
+    "wagtail.images",
+    "wagtail.search",
+    "wagtail.admin",
+    "wagtail",
+    "modelcluster",
+    "taggit",
+    "wagtail.api.v2",  # https://docs.wagtail.io/en/v2.1.1/advanced_topics/api/v2.html
+]
 THIRD_PARTY_APPS = [
     "crispy_forms",
     "crispy_bootstrap5",
@@ -84,6 +102,7 @@ THIRD_PARTY_APPS = [
     "storages",
     "silk",
     "sorl.thumbnail",
+    "cacheops",
 ]
 
 LOCAL_APPS = [
@@ -92,10 +111,11 @@ LOCAL_APPS = [
     "some_proj.comments",
     "some_proj.media_for_kino_card",
     "some_proj.serials",
+    "some_proj.blog",
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
-INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+INSTALLED_APPS = DJANGO_APPS + WAGTAIL + THIRD_PARTY_APPS + LOCAL_APPS
 
 # MIGRATIONS
 # ------------------------------------------------------------------------------
@@ -152,6 +172,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
     "silk.middleware.SilkyMiddleware",
+    "wagtail.contrib.redirects.middleware.RedirectMiddleware",
 ]
 
 # STATIC
@@ -237,6 +258,7 @@ EMAIL_TIMEOUT = 5
 # ------------------------------------------------------------------------------
 # Django Admin URL.
 ADMIN_URL = "admin/"
+WAGTAIL_ADMIN_URL = "wagtail-admin/"
 # https://docs.djangoproject.com/en/dev/ref/settings/#admins
 ADMINS = [("""Daniel Roy Greenfeld""", "daniel-roy-greenfeld@example.com")]
 # https://docs.djangoproject.com/en/dev/ref/settings/#managers
@@ -375,8 +397,8 @@ AWS_S3_MAX_MEMORY_SIZE = env.int(
 # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#settings
 AWS_S3_REGION_NAME = env("AWS_S3_REGION_NAME", default=None)
 # https://django-storages.readthedocs.io/en/latest/backends/amazon-S3.html#cloudfront
-AWS_S3_CUSTOM_DOMAIN = env("AWS_S3_CUSTOM_DOMAIN", default=None)
-AWS_S3_ENDPOINT_URL = env("AWS_S3_CUSTOM_DOMAIN", default=None)
+AWS_S3_ENDPOINT_URL = env("AWS_S3_ENDPOINT_URL", default=None)
+AWS_S3_FILE_OVERWRITE = False
 
 # STATIC & MEDIA
 STORAGES = {
@@ -387,7 +409,7 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
-MEDIA_URL = f"{AWS_S3_CUSTOM_DOMAIN}/{AWS_STORAGE_BUCKET_NAME}/"
+MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/"
 
 
 # sink
@@ -406,3 +428,31 @@ THUMBNAIL_PREFIX = "photos/"
 THUMBNAIL_KVSTORE = "sorl.thumbnail.kvstores.redis_kvstore.KVStore"
 THUMBNAIL_DEGUG = True
 THUMBNAIL_FAST_URL = True
+
+# wagtail
+# --------------
+WAGTAIL_SITE_NAME = "blogging"
+WAGTAILADMIN_BASE_URL = "https://blogging"
+WAGTAIL_ENABLE_UPDATE_CHECK = False
+WAGTAILIMAGES_IMAGE_MODEL = "blog.CustomImage"
+WAGTAILIMAGES_RASTEROP_MODEL = "blog.CustomRendition"
+
+# cacheops
+# --------------
+# CACHEOPS_REDIS = "redis://localhost:6379/1"
+CACHEOPS_REDIS = {
+    "host": "localhost",
+    "port": 6379,
+    "db": 0,
+    "socket_timeout": 3,
+}
+
+CACHEOPS = {
+    "blog.*": {"ops": "all", "timeout": 60 * 60},
+    "films.*": {"ops": "all", "timeout": 60 * 60},
+    "serials.*": {"ops": "all", "timeout": 60 * 60},
+    "comments.*": {"ops": "all", "timeout": 60 * 60},
+    "media_for_kino_card.*": {"ops": "all", "timeout": 60 * 60},
+    "users.*": {"ops": "all", "timeout": 60 * 60},
+}
+# CACHEOPS_DEBUG = True

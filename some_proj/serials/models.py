@@ -46,4 +46,4 @@ class PhotoSerial(models.Model):
         verbose_name_plural = "кадры из сериалов"
 
     def __str__(self):
-        return f"Фото {self.serial.name}"
+        return f"Кадр {self.serial.name} {self.serial.season} сезон"

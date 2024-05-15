@@ -12,7 +12,7 @@ def create_links(quality, file_name):
 
     # создание ссылки в стиле s3 для отображения в Api
     url_api_s3 = (
-        f"{settings.AWS_S3_CUSTOM_DOMAIN}/"
+        f"{settings.AWS_S3_ENDPOINT_URL}/"
         f"{settings.AWS_STORAGE_BUCKET_NAME}/"
         f"videos/{hash_file_name}/{hash_quality}.mp4"
     )

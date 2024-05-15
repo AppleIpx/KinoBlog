@@ -2,13 +2,19 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import include
+from django.urls import include, re_path
 from django.urls import path
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
 from drf_spectacular.views import SpectacularAPIView
 from drf_spectacular.views import SpectacularSwaggerView
 from rest_framework.authtoken.views import obtain_auth_token
+from wagtail.admin import urls as wagtailadmin_urls
+from wagtail import urls as wagtail_urls
+from wagtail.documents import urls as wagtaildocs_urls
+
+
+from config.api_router import api_router
 
 urlpatterns = [
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
@@ -19,6 +25,7 @@ urlpatterns = [
     ),
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
+    path(settings.WAGTAIL_ADMIN_URL, include(wagtailadmin_urls)),
     # User management
     path("users/", include("some_proj.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
@@ -40,6 +47,7 @@ urlpatterns += [
         SpectacularSwaggerView.as_view(url_name="api-schema"),
         name="api-docs",
     ),
+    # Ensure that the api_router line appears above the default Wagtail page serving route
 ]
 
 if settings.DEBUG:

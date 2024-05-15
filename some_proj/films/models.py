@@ -5,8 +5,8 @@ from django.db import models
 from sorl.thumbnail import ImageField
 
 from some_proj.media_for_kino_card.models import MediaFile
-from some_proj.media_for_kino_card.utils.shared_files import clean
 from some_proj.media_for_kino_card.utils.shared_files import generate_filename_photos
+from some_proj.media_for_kino_card.utils.shared_files import poster_validator
 
 User = get_user_model()
 
@@ -134,7 +134,7 @@ class BaseContentModel(models.Model):
     poster = ImageField(
         verbose_name="Постер",
         upload_to=generate_filename_photos,
-        validators=[clean],
+        validators=[poster_validator],
         blank=True,
     )
     trailer = models.CharField(
@@ -206,7 +206,7 @@ class PhotoFilm(models.Model):
         verbose_name_plural = "кадры из фильмов"
 
     def __str__(self):
-        return f"кадр из {self.film.name}"
+        return f"Кадр из {self.film.name}"
 
 
 class FavoriteContent(BaseUserRelation):

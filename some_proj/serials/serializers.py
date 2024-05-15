@@ -5,7 +5,6 @@ from some_proj.contrib.mixins import FavoriteMixin
 from some_proj.contrib.mixins import GetPostersMixin
 from some_proj.contrib.mixins import ReactionCountMixin
 from some_proj.films.serializers.film_serializers import DetailedContentSerializer
-from some_proj.media_for_kino_card.utils.shared_files import HTTPRemoverSerializer
 from some_proj.serials.models import PhotoSerial
 from some_proj.serials.models import SerialModel
 
@@ -13,7 +12,6 @@ from some_proj.serials.models import SerialModel
 class SerialSerializer(
     FavoriteMixin,
     GetPostersMixin,
-    HTTPRemoverSerializer,
     serializers.ModelSerializer,
 ):
     class Meta:
@@ -27,10 +25,6 @@ class SerialSerializer(
             "is_favorite",
             "season",
             "num_serials",
-        ]
-        fields_to_process = [
-            "poster",
-            "posters",
         ]
 
 
@@ -71,7 +65,7 @@ class ListSerialGuestSerializer(SerialGuestSerializer):
         ]
 
 
-class PhotoSerialSerializer(serializers.ModelSerializer):
+class CadrsSerialSerializer(serializers.ModelSerializer):
     class Meta:
         model = PhotoSerial
         fields = [
@@ -84,7 +78,7 @@ class DetailedSerialSerializer(
     DetailedContentSerializer,
     ListSerialSerializer,
 ):
-    cadrs = PhotoSerialSerializer(many=True)
+    cadrs = CadrsSerialSerializer(many=True)
 
     class Meta(ListSerialSerializer.Meta):
         fields = [
