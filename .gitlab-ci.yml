@@ -26,7 +26,7 @@ pytest:
   stage: tests
   image: docker/compose:1.29.2
   tags:
-    - docker
+    - gitlab-runner-ext
   services:
     - docker:dind
   before_script:
