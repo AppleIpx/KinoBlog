@@ -1,6 +1,6 @@
 stages:
   - lint
-#  - tests
+  - tests
 
 variables:
   POSTGRES_USER: 'some_proj'
