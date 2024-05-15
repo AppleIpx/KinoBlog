@@ -4,7 +4,8 @@ from some_proj.blog.models.blog_page import BlogTagPage
 
 
 class BlogTagPageSerializer(serializers.ModelSerializer):
-    tag_name = serializers.CharField(source="name")
+    id = serializers.IntegerField(source="tag.id")
+    tag_name = serializers.CharField(source="tag.name")
 
     class Meta:
         model = BlogTagPage

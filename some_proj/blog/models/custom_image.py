@@ -36,9 +36,7 @@ class CustomRendition(AbstractRendition):
         unique_together = (("image", "filter_spec", "focal_point_key"),)
 
 
-class CustomImageChoose(
-    StructBlock,
-):
+class CustomImageChoose(StructBlock):
     image = ListBlock(
         ImageChooserBlock(
             label="Изображение",
@@ -61,18 +59,16 @@ class CustomImageChoose(
         label = "Изображение"
 
     def get_api_representation(self, value, context=None):
-        representation = super().get_api_representation(value, context)
+        super().get_api_representation(value, context)
         images = []
-        title = value["title"]
         for image in value["image"]:
-            image_data = ImageRenditionField("max-1920x1080|format-jpeg").to_representation(image)
-            image_data["url"] = image_data["url"]
-            images.append(image_data)
-
-        representation.update(
-            {
-                "images": images,
-                "title": title,
-            },
-        )
-        return representation
+            photo = {
+                "id": image.id,
+                "image": ImageRenditionField("max-1920x1080|format-jpeg").to_representation(image),
+                "image_tags": [{"id": tag.id, "name": tag.name} for tag in image.tags.all()],
+            }
+            images.append(photo)
+        return {
+            "title": value["title"],
+            "images": images,
+        }
