@@ -48,7 +48,7 @@ class AuthorBlog(models.Model):
         blank=True,
     )
     author_image = models.ForeignKey(
-        "wagtailimages.Image",
+        "blog.CustomImage",
         verbose_name="Изображение автора",
         null=True,
         blank=True,
