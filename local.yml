@@ -52,11 +52,11 @@ services:
       - '9000:9000'
     command: /start-docs
 
-  mailpit:
-    image: docker.io/axllent/mailpit:latest
-    container_name: some_proj_local_mailpit
-    ports:
-      - "8025:8025"
+#  mailpit:
+#    image: docker.io/axllent/mailpit:latest
+#    container_name: some_proj_local_mailpit
+#    ports:
+#      - "8025:8025"
 
   redis:
     image: docker.io/redis:6
