@@ -6,6 +6,7 @@
     <envs>
       <env name="AWS_ACCESS_KEY_ID" value="intern-24-izvekov" />
       <env name="AWS_S3_CUSTOM_DOMAIN" value="minio.space.rdclr.ru" />
+      <env name="AWS_S3_ENDPOINT_URL" value="https://minio.space.rdclr.ru" />
       <env name="AWS_S3_MAX_MEMORY_SIZE" value="100_000_000_000_000" />
       <env name="AWS_S3_REGION_NAME" value="eu-west-2" />
       <env name="AWS_SECRET_ACCESS_KEY" value="PiJkvnvnvvBRKwM7Uz86UFy" />
