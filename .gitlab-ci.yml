@@ -25,6 +25,7 @@ precommit:
 
 pytest:
   stage: tests
+  resource_group: test_group
 #  image: docker/compose:1.29.2
   image: docker:latest
   services:
