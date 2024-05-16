@@ -1,3 +1,4 @@
+image: docker:20.10.16
 stages:
   - lint
   - tests
@@ -24,7 +25,7 @@ precommit:
 
 pytest:
   stage: tests
-  image: docker/compose:1.29.2
+#  image: docker/compose:1.29.2
   services:
     - docker:dind
   before_script:
