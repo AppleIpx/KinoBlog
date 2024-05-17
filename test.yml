@@ -1,0 +1,57 @@
+version: '3'
+
+volumes:
+  some_proj_local_postgres_data: {}
+  some_proj_local_postgres_data_backups: {}
+
+services:
+  some-proj-django-test: &some_proj_django_test
+    build:
+      context: .
+      dockerfile: ./compose/local/django/Dockerfile
+    image: some_proj_django_test
+    container_name: some_proj_django_test
+    depends_on:
+      - some-proj-postgres-test
+      - some-proj-redis-test
+    volumes:
+      - /app
+    working_dir: /app
+    env_file:
+      - ./.envs/.test/.django
+      - ./.envs/.test/.postgres
+    command: /start
+
+  some-proj-postgres-test:
+    build:
+      context: .
+      dockerfile: ./compose/production/postgres/Dockerfile
+    image: some_proj_postgres_test
+    container_name: some_proj_postgres_test
+    volumes:
+      - some_proj_postgres_data:/var/lib/postgresql/data
+      - some_proj_postgres_data_backups:/backups
+    env_file:
+      - ./.envs/.test/.postgres
+
+  some-proj-redis-test:
+    image: docker.io/redis:6
+    container_name: some_proj_redis_test
+
+  some-proj-celeryworker-test:
+    <<: *some_proj_django_test
+    image: some_proj_celeryworker_test
+    container_name: some_proj_celeryworker_test
+    depends_on:
+      - some-proj-redis-test
+      - some-proj-postgres-test
+    command: /start-celeryworker
+
+  some-proj-celerybeat-test:
+    <<: *some_proj_django_test
+    image: some_proj_celerybeat_test
+    container_name: some_proj_celerybeat_test
+    depends_on:
+      - some-proj-redis-test
+      - some-proj-postgres-test
+    command: /start-celerybeat
