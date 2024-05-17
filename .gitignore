@@ -333,4 +333,4 @@ some_proj/media_for_card/
 .env
 .envs/*
 !.envs/.local/
-/some_proj/media_for_kino_card/testfile/
+!.envs/.test/
