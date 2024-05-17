@@ -22,7 +22,7 @@ services:
       - ./.envs/.local/.django
       - ./.envs/.local/.postgres
     ports:
-      - '8000:8000'
+      - '7654:7654'
     command: /start
 
   postgres:
