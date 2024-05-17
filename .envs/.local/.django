@@ -1,6 +1,9 @@
 # General
 # ------------------------------------------------------------------------------
 USE_DOCKER=yes
+CELERY_BROKER_URL=redis://localhost:6379/0
+DATABASE_URL=postgres://postgres:1234@127.0.0.1:5432/all_online
+DJANGO_SETTINGS_MODULE=config.settings.local
 IPYTHONDIR=/app/.ipython
 # Redis
 # ------------------------------------------------------------------------------
@@ -22,9 +25,5 @@ AWS_S3_MAX_MEMORY_SIZE=100_000_000_000_000
 AWS_S3_REGION_NAME=eu-west-2
 AWS_SECRET_ACCESS_KEY=PiJkvnvnvvBRKwM7Uz86UFy
 AWS_STORAGE_BUCKET_NAME=intern-24-izvekov
-DJANGO_SETTINGS_MODULE=config.settings.local
 PYTHONUNBUFFERED=1
 SILK_PERCENT=0
-CELERY_BROKER_URL=redis://localhost:6379/0
-DATABASE_URL=postgres://postgres:1234@127.0.0.1:5432/all_online
-USE_DOCKER=yes
