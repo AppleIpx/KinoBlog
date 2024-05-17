@@ -1,8 +1,8 @@
 version: '3'
 
 volumes:
-  some_proj_local_postgres_data: {}
-  some_proj_local_postgres_data_backups: {}
+  some_proj_postgres_data: {}
+  some_proj_postgres_data_backups: {}
 
 services:
   some-proj-django-test: &some_proj_django_test
