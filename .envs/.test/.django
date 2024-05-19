@@ -8,11 +8,11 @@ IPYTHONDIR=/app/.ipython
 
 # Celery
 # ------------------------------------------------------------------------------
-CELERY_BROKER_URL=redis://some-proj-redis-test:6379/0
+CELERY_BROKER_URL=redis://some_proj_redis_test:6379/0
 
 # Redis
 # ------------------------------------------------------------------------------
-REDIS_URL=redis://some-proj-redis-test:6379/0
+REDIS_URL=redis://some_proj_redis_test:6379/0
 
 # AWS
 # ------------------------------------------------------------------------------
