@@ -96,4 +96,4 @@ COPY ./compose/local/django/test_video/short_nigth_city.mp4 /app/some_proj/media
 # Копирование статических файлов
 COPY ../../../some_proj/static /app/static
 
-ENTRYPOINT ["/start"]
+ENTRYPOINT ["/entrypoint"]
