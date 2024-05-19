@@ -93,6 +93,10 @@ COPY . ${APP_HOME}
 # Copy the video file to the desired location for video encoding tests
 COPY ./compose/local/django/test_video/short_nigth_city.mp4 /app/some_proj/media/videos/test_video/
 
+# ENV
+# Установить фиктивное значение для DATABASE_URL
+ENV DATABASE_URL=postgres://postgres:1234@some_proj_postgres_test:5432/all_online
+
 # Collect static files
 COPY ../../../some_proj/static /app/static
 RUN python manage.py collectstatic --noinput
