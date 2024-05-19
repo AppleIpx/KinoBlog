@@ -45,7 +45,7 @@ urlpatterns += [
     path("api/schema/", SpectacularAPIView.as_view(), name="api-schema"),
     path(
         "api/docs/",
-        SpectacularSwaggerView.as_view(url_name="api-schema", permission_classes=(IsAdminUser,)),
+        SpectacularSwaggerView.as_view(url_name="api-schema"),
         name="api-docs",
     ),
     # Ensure that the api_router line appears above the default Wagtail page serving route
