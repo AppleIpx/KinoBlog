@@ -40,7 +40,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y ffmpeg
 COPY ../../../some_proj/static /app/static
 
 # Соборка статики
-RUN cd ../../../ && python manage.py collectstatic --noinput
+RUN cd $APP_HOME && python manage.py collectstatic --noinput
 
 # devcontainer dependencies and utils
 RUN apt-get update && apt-get install --no-install-recommends -y \
