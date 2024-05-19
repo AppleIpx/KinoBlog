@@ -37,9 +37,6 @@ pytest:
   script:
     - docker-compose -f test.yml run --rm some-proj-django-test python manage.py makemigrations
     - docker-compose -f test.yml run some-proj-django-test python manage.py collectstatic
-    - ls
-    - cd some_proj/media/videos/test_video
-    - ls
     - docker-compose -f test.yml run some-proj-django-test pytest -n auto --create-db
     - docker-compose -f test.yml down
     - docker image rm some_proj_postgres_test
