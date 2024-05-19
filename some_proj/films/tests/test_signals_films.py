@@ -17,7 +17,7 @@ from some_proj.media_for_kino_card.utils.shared_files import generate_path
 
 
 class TestFilmSignals(TestCase):
-    orig_local_path = Path("/app/some_proj/media", "videos", "test_video", "short_nigth_city.mp4")
+    orig_local_path = "/some_proj/media/videos/test_video/short_nigth_city.mp4"
     qualities = Quality.objects.all()
     content_name = "tests/test_file"
     local_files_paths = []
@@ -55,7 +55,7 @@ class TestFilmSignals(TestCase):
         self.assertEqual(self.media_file.orig_path_file, new_value)
 
     def test_get_correlation(self):
-        self.correlation_value = get_correlation(str(self.orig_local_path))
+        self.correlation_value = get_correlation(self.orig_local_path)
         self.assertEqual(self.correlation_value, 1920 / 1080, self.correlation_value)
 
     def test_recording(self):
