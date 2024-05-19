@@ -36,7 +36,6 @@ pytest:
     - docker-compose -f test.yml up -d
   script:
     - docker-compose -f test.yml run --rm some-proj-django-test python manage.py makemigrations
-    - rm -rf <STATIC_ROOT>/*
     - docker-compose -f test.yml run some-proj-django-test python manage.py collectstatic
     - docker-compose -f test.yml run some-proj-django-test pytest -n auto --create-db
     - docker-compose -f test.yml down
