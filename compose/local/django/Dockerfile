@@ -36,6 +36,12 @@ WORKDIR ${APP_HOME}
 # Install ffmpeg
 RUN apt-get update && apt-get install --no-install-recommends -y ffmpeg
 
+# Копирование статических файлов
+COPY ./static /app/static
+
+# Коллекция статических файлов внутри образа
+RUN python manage.py collectstatic --noinput
+
 # devcontainer dependencies and utils
 RUN apt-get update && apt-get install --no-install-recommends -y \
   sudo git bash-completion nano ssh
