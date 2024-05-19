@@ -8,7 +8,7 @@ def get_correlation(orig_local_path_value):
     logging.info(correlation_start_message)
 
     # Определение соотношения разрешения оригинального фильма
-    correlation = get_video_stream.delay(
+    correlation = get_video_stream(
         orig_local_path_value,
     )
     correlation_value = correlation.get(timeout=60)
