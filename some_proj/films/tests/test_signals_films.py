@@ -55,7 +55,7 @@ class TestFilmSignals(TestCase):
         self.assertEqual(self.media_file.orig_path_file, new_value)
 
     def test_get_correlation(self):
-        self.correlation_value = get_correlation(int(self.orig_local_path))
+        self.correlation_value = get_correlation(str(self.orig_local_path))
         self.assertEqual(self.correlation_value, 1920 / 1080, self.correlation_value)
 
     def test_recording(self):
