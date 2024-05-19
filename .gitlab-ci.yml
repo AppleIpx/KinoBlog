@@ -33,7 +33,7 @@ pytest:
     - docker-compose -f test.yml build
     # Ensure celerybeat does not crash due to non-existent tables
     - docker-compose -f test.yml run --rm some-proj-django-test python manage.py migrate
-    - docker-compose -f test.yml run --rm some-proj-django-test python manage.py collectstatic --noinput
+    - docker-compose -f test.yml run some-proj-django-test python manage.py collectstatic --noinput
     - docker-compose -f test.yml up -d
   script:
     - docker-compose -f test.yml run --rm some-proj-django-test python manage.py makemigrations
