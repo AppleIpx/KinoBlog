@@ -39,6 +39,9 @@ RUN apt-get update && apt-get install --no-install-recommends -y ffmpeg
 # Копирование статических файлов
 COPY ../../../some_proj/static /app/static
 
+# Соборка статики
+RUN cd ../../../ && python manage.py collectstatic --noinput
+
 # devcontainer dependencies and utils
 RUN apt-get update && apt-get install --no-install-recommends -y \
   sudo git bash-completion nano ssh
