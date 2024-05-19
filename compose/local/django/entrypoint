@@ -4,4 +4,6 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-python manage.py collectstatic --noinput
+export CELERY_BROKER_URL="${REDIS_URL}"
+export DATABASE_URL="${DATABASE_URL}"
+export USE_DOCKER="${USE_DOCKER}"
