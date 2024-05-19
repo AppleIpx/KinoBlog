@@ -33,6 +33,8 @@ ENV BUILD_ENV ${BUILD_ENVIRONMENT}
 
 WORKDIR ${APP_HOME}
 
+# Install ffmpeg
+RUN apt-get update && apt-get install --no-install-recommends -y ffmpeg
 
 # devcontainer dependencies and utils
 RUN apt-get update && apt-get install --no-install-recommends -y \
