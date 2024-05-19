@@ -95,6 +95,6 @@ COPY ./compose/local/django/test_video/short_nigth_city.mp4 /app/some_proj/media
 
 # Копирование статических файлов
 COPY ../../../some_proj/static /app/static
-RUN python /app/some_proj/manage.py collectstatic --noinput
+RUN python ./manage.py collectstatic --noinput
 
 ENTRYPOINT ["/entrypoint"]
