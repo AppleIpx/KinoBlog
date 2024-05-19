@@ -455,4 +455,3 @@ CACHEOPS = {
     "media_for_kino_card.*": {"ops": "all", "timeout": 60 * 60},
     "users.*": {"ops": "all", "timeout": 60 * 60},
 }
-# CACHEOPS_DEBUG = True
