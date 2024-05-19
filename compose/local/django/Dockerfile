@@ -36,12 +36,6 @@ WORKDIR ${APP_HOME}
 # Install ffmpeg
 RUN apt-get update && apt-get install --no-install-recommends -y ffmpeg
 
-# Копирование статических файлов
-COPY ../../../some_proj/static /app/static
-
-# Соборка статики
-RUN cd $APP_HOME && python manage.py collectstatic --noinput
-
 # devcontainer dependencies and utils
 RUN apt-get update && apt-get install --no-install-recommends -y \
   sudo git bash-completion nano ssh
@@ -98,6 +92,12 @@ COPY . ${APP_HOME}
 
 # Copy the video file to the desired location for video encoding tests
 COPY ./compose/local/django/test_video/short_nigth_city.mp4 /app/some_proj/media/videos/test_video/
+
+# Копирование статических файлов
+COPY ../../../some_proj/static /app/static
+
+# Соборка статики
+RUN cd $APP_HOME && python manage.py collectstatic --noinput
 
 
 ENTRYPOINT ["/entrypoint"]
