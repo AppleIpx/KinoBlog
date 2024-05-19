@@ -65,7 +65,7 @@ COPY --from=python-build-stage /usr/src/app/wheels  /wheels/
 RUN pip install --no-cache-dir --no-index --find-links=/wheels/ /wheels/* \
   && rm -rf /wheels/
 
-COPY ./compose/local/django/entrypoint /entrypoint
+COPY ./compose/production/django/entrypoint /entrypoint
 RUN sed -i 's/\r$//g' /entrypoint
 RUN chmod +x /entrypoint
 
@@ -95,7 +95,7 @@ COPY ./compose/local/django/test_video/short_nigth_city.mp4 /app/some_proj/media
 
 # Collect static files
 COPY ../../../some_proj/static /app/static
-RUN python /app/some_proj/manage.py collectstatic --noinput
+RUN python manage.py collectstatic --noinput
 
 
 ENTRYPOINT ["/entrypoint"]
