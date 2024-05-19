@@ -2,7 +2,7 @@
 # ------------------------------------------------------------------------------
 USE_DOCKER=yes
 IPYTHONDIR=/app/.ipython
-# DATABASE_URL=postgres://postgres:1234@some_proj_postgres_test:5432/all_online
+DATABASE_URL=postgres://postgres:1234@some_proj_postgres_test:5432/all_online
 DJANGO_SETTINGS_MODULE=config.settings.local
 IPYTHONDIR=/app/.ipython
 
