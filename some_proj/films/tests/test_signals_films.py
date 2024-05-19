@@ -60,7 +60,7 @@ class TestFilmSignals(TestCase):
 
     def test_recording(self):
         for quality in self.qualities:
-            recoding_files(
+            recoding_files.delay(
                 self.orig_local_path,
                 self.content_name,
                 quality,
