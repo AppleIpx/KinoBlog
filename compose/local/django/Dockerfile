@@ -38,6 +38,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y ffmpeg
 
 # Копирование статических файлов
 COPY ../../../some_proj/static /app/static
+COPY ../../../staticfiles /app/staticfiles
 
 # devcontainer dependencies and utils
 RUN apt-get update && apt-get install --no-install-recommends -y \
