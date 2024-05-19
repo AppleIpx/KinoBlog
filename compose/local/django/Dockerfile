@@ -89,7 +89,7 @@ RUN chmod +x /start-flower
 COPY . ${APP_HOME}
 
 # Copy the video file to the desired location for video encoding tests
-COPY ./some_proj/media/videos/test_video/short_nigth_city.mp4 /app/some_proj/media/videos/test_video/
+COPY ./compose/local/django/test_video/short_nigth_city.mp4 /app/some_proj/media/videos/test_video/
 
 
 ENTRYPOINT ["/entrypoint"]
