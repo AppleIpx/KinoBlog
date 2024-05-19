@@ -441,7 +441,7 @@ WAGTAILIMAGES_RASTEROP_MODEL = "blog.CustomRendition"
 # cacheops
 # --------------
 CACHEOPS_REDIS = {
-    "host": "localhost",
+    "host": "some_proj_postgres_test",
     "port": 6379,
     "db": 0,
     "socket_timeout": 3,
