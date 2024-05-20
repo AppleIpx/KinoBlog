@@ -241,7 +241,7 @@ class IsContentWatch(BaseUserRelation):
         if self.content_object and hasattr(self.content_object, "episode"):
             return (
                 f"{self.user} смотрел {self.content_object.name} и"  # type: ignore[union-attr]
-                f" остановился на {self.media.content_object.episode} серии на {self.minutes} минуте"
+                f" остановился на {self.media.content_object.episode} серии на {self.minutes} минуте"  # type: ignore[union-attr]
             )
         return f"{self.content_object} не определён"
 
