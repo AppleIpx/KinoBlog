@@ -58,4 +58,3 @@ deploy:
     - docker-compose --env-file .env -f production.yml down --timeout=60 --remove-orphans
     - docker-compose --env-file .env -f production.yml up --build --detach
     - docker image prune -f || true
-  when: manual
