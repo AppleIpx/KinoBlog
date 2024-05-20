@@ -12,6 +12,7 @@ User = get_user_model()
 
 
 class BaseUserRelation(models.Model):
+    user: User  # type: ignore[valid-type]
     user = models.ForeignKey(
         User,
         verbose_name="Пользователь",
@@ -56,7 +57,7 @@ class BasePersonModel(models.Model):
 
 
 class ProducerModel(BasePersonModel):
-    films_made = models.ManyToManyField(
+    films_made = models.ManyToManyField(  # type: ignore[var-annotated]
         "FilmModel",
         verbose_name="Фильмы/сериалы",
         blank=True,
@@ -71,7 +72,7 @@ class ProducerModel(BasePersonModel):
 
 
 class ActorModel(BasePersonModel):
-    films_participated = models.ManyToManyField(
+    films_participated = models.ManyToManyField(  # type: ignore[var-annotated]
         "FilmModel",
         verbose_name="Участие актера в следующих фильмах",
         blank=True,
@@ -215,6 +216,8 @@ class FavoriteContent(BaseUserRelation):
         verbose_name_plural = "избранные контенты"
 
     def __str__(self):
+        if self.content_object is None:
+            return f"{self.user} добавил неизвестный объект"
         return f"{self.user} добавил {self.content_object.name}"
 
 
@@ -233,12 +236,12 @@ class IsContentWatch(BaseUserRelation):
         verbose_name_plural = "просмотренные контенты"
 
     def __str__(self):
-        message_for_film = f"{self.user} смотрел {self.content_object.name} и остановился на {self.minutes}"
-        message_for_serial = (
-            f"{self.user} смотрел {self.content_object.name} и"
+        if isinstance(self.content_object, FilmModel):
+            return f"{self.user} смотрел {self.content_object.name} и остановился на {self.minutes}"
+        return (
+            f"{self.user} смотрел {self.content_object.name} и"  # type: ignore[union-attr]
             f" остановился на {self.media.content_object.episode} серии на {self.minutes} минуте"
         )
-        return message_for_serial if hasattr(self.content_object, "season") else message_for_film
 
 
 class SeeLateContent(BaseUserRelation):
@@ -247,4 +250,6 @@ class SeeLateContent(BaseUserRelation):
         verbose_name_plural = "добавленные фильмы в посмотеть позже"
 
     def __str__(self):
-        return f"{self.user} добавил {self.content_object.name} в посмотреть позже"
+        if hasattr(self.content_object, "name"):
+            return f"{self.user} добавил {self.content_object.name} в посмотреть позже"  # type: ignore[union-attr]
+        return "content_object не определён"

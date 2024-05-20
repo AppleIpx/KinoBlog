@@ -23,9 +23,14 @@ def download_file_from_s3(s3_path_to_file, content_name):
 def get_video_stream(filepath):
     probe = ffmpeg.probe(filepath)
     video_stream = next((stream for stream in probe["streams"] if stream["codec_type"] == "video"), None)
-    width = int(video_stream["width"])
-    height = int(video_stream["height"])
-    return width / height
+
+    if video_stream is not None:
+        width = int(video_stream["width"])
+        height = int(video_stream["height"])
+        if height != 0:
+            return width / height
+        return None
+    return None
 
 
 @shared_task

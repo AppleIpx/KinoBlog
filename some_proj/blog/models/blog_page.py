@@ -76,7 +76,7 @@ class BlogPage(Page):
         FieldPanel("body"),
     ]
 
-    subpage_types = []
+    subpage_types: list[type] = []
     parent_page_types = ["home.HomePage"]
 
     class Meta:

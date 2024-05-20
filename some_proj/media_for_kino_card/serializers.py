@@ -5,7 +5,7 @@ from some_proj.media_for_kino_card.models import UrlsInMedia
 
 
 class UrlsInMediaSerializer(serializers.ModelSerializer):
-    quality = serializers.SlugRelatedField(
+    quality = serializers.SlugRelatedField(  # type: ignore[var-annotated]
         slug_field="name",
         read_only=True,
     )

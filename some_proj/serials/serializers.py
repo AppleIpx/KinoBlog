@@ -43,8 +43,6 @@ class ListSerialSerializer(
 
 
 class SerialGuestSerializer(SerialSerializer):
-    is_favorite = None
-
     class Meta(SerialSerializer.Meta):
         fields = [
             field
@@ -101,9 +99,6 @@ class DetailedSerialGuestSerializer(
     DetailedSerialSerializer,
     SerialGuestSerializer,
 ):
-    is_watched = None
-    is_see_late = None
-
     class Meta(SerialGuestSerializer.Meta):
         fields = [
             *[

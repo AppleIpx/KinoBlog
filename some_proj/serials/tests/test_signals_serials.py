@@ -13,14 +13,16 @@ from some_proj.media_for_kino_card.utils.celery_files import get_correlation
 from some_proj.media_for_kino_card.utils.shared_files import create_add_links
 from some_proj.media_for_kino_card.utils.shared_files import generate_path
 from some_proj.serials.models import SerialModel
+from some_proj.serials.tests.factories.serial import SerialFactory
 from some_proj.serials.tests.utils.create_serials import create_serial
 
 
 class TestSerialSignals(TestCase):
+    serial: SerialFactory
     orig_local_path = "/app/some_proj/media/videos/test_video/short_nigth_city.mp4"
     qualities = Quality.objects.all()
     content_name = "tests/test_file"
-    local_files_paths = []
+    local_files_paths: list[str] = []
 
     @classmethod
     def setUpClass(cls):
@@ -44,13 +46,10 @@ class TestSerialSignals(TestCase):
     @patch("some_proj.media_for_kino_card.signals.start_signal_processes")
     def test_pre_save_signal_saves_updated_orig_path_file(self, mock_start_signal_processes):
         self.media_file = create_media(SerialModel, self.serial.id)
-
         new_value = "new value"
         self.media_file.orig_path_file = new_value
         self.media_file.save()
-
         self.media_file.refresh_from_db()
-
         mock_start_signal_processes.assert_called()
         self.assertEqual(self.media_file.orig_path_file, new_value)
 
@@ -68,7 +67,7 @@ class TestSerialSignals(TestCase):
             )
             output_folder = Path(generate_path(self.content_name))
             output_file = output_folder / f"{quality}.mp4"
-            self.local_files_paths.append(output_file)
+            self.local_files_paths.append(str(output_file))
             self.assertTrue(output_file.exists(), f"Файл {output_file} не существует")
 
     def test_check_recorded_files(self):
