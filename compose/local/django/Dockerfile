@@ -93,15 +93,5 @@ COPY . ${APP_HOME}
 # Copy the video file to the desired location for video encoding tests
 COPY ./compose/local/django/test_video/short_nigth_city.mp4 /app/some_proj/media/videos/test_video/
 
-# прописать в entrypoint
-# ENV
-ENV DATABASE_URL=postgres://postgres:1234@some_proj_postgres_test:5432/all_online
-ENV CELERY_BROKER_URL=redis://some_proj_redis_test:6379/0
-ENV USE_DOCKER=yes
-
-# Collect static files
-COPY ../../../some_proj/static /app/static
-RUN python manage.py collectstatic --noinput
-
 
 ENTRYPOINT ["/entrypoint"]
