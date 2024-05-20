@@ -2,6 +2,7 @@ image: docker:20.10.16
 stages:
   - lint
   - tests
+  - deploy
 
 variables:
   POSTGRES_USER: 'some_proj'
@@ -40,3 +41,21 @@ pytest:
     - docker-compose -f test.yml run some-proj-django-test pytest -n auto --create-db
     - docker-compose -f test.yml down
     - docker image rm some_proj_postgres_test
+
+deploy:
+  stage: deploy
+  image: docker:latest
+  variables:
+    DOCKER_HOST: "ssh://${SERVER_USER}@${SERVER_HOST}"
+  before_script:
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - eval $(ssh-agent -s)
+    - echo "${SSH_KEY}" | tr -d '\r' | ssh-add -
+  script:
+    - echo "$ENV_FILE" > .env
+    - docker-compose --env-file .env -f production.yml pull
+    - docker-compose --env-file .env -f production.yml down --timeout=60 --remove-orphans
+    - docker-compose --env-file .env -f production.yml up --build --detach
+    - docker image prune -f || true
+  when: manual
