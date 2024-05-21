@@ -51,7 +51,7 @@ deploy:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - eval $(ssh-agent -s)
-    - echo "${SSH_KEY}" | tr -d '\r' | ssh-add -
+    - echo "${SSH_KEY}" | tr -d '\r' | ssh-add /dev/stdin
   script:
     - echo "$ENV_FILE" > .env
     - docker-compose --env-file .env -f production.yml pull
