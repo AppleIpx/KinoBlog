@@ -51,8 +51,13 @@ deploy:
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
     - mkdir -p ~/.ssh
     - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - chmod 400 "$SSH_PRIVATE_KEY"
+    - ssh-add "$SSH_PRIVATE_KEY"
+    - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
+    - ssh-keyscan "$SERVER_HOST"
+    - cp "$SSH_KNOWN_HOSTS" ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
   script:
     - ssh -tt SERVER_USER@SERVER_HOST
     - cd ~/online_cinema/Izvekov/
