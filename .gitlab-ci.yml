@@ -48,13 +48,14 @@ deploy:
   variables:
     DOCKER_HOST: "ssh://${SERVER_USER}@${SERVER_HOST}"
   before_script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "SSH_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - eval $(ssh-agent -s)
-    - echo "${SSH_KEY}" | tr -d '\r' | ssh-add /dev/stdin
   script:
-    - echo "$ENV_FILE" > .env
-    - docker-compose --env-file .env -f production.yml pull
-    - docker-compose --env-file .env -f production.yml down --timeout=60 --remove-orphans
-    - docker-compose --env-file .env -f production.yml up --build --detach
+    - ssh SERVER_USER@SERVER_HOST
+    - cd ~/online_cinema/Izvekov/
+    - git pull
+    - docker-compose production.yml up --build --detach
     - docker image prune -f || true

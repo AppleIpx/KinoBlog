@@ -334,4 +334,3 @@ some_proj/media_for_card/
 .envs/*
 !.envs/.local/
 !.envs/.test/
-!.envs/.production/
