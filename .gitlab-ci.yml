@@ -51,16 +51,22 @@ deploy:
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
     - mkdir -p ~/.ssh
     - eval $(ssh-agent -s)
-    - chmod 400 "$SSH_PRIVATE_KEY"
-    - ssh-add "$SSH_PRIVATE_KEY"
-    - mkdir -p ~/.ssh
+
+    # Сохранение приватного ключа в файл и установка прав доступа
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 400 ~/.ssh/id_rsa
+    - ssh-add ~/.ssh/id_rsa
+
+    # Установка прав доступа на директорию .ssh
     - chmod 700 ~/.ssh
-    - ssh-keyscan "$SERVER_HOST"
-    - cp "$SSH_KNOWN_HOSTS" ~/.ssh/known_hosts
+
+    # Добавление хоста в known_hosts и установка прав доступа
+    - ssh-keyscan "$SERVER_HOST" > ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
   script:
-    - ssh -tt SERVER_USER@SERVER_HOST
-    - cd ~/online_cinema/Izvekov/
-    - git pull
-    - docker-compose production.yml up --build --detach
-    - docker image prune -f || true
+    - ssh -tt $SERVER_USER@$SERVER_HOST <<EOF
+      cd ~/online_cinema/Izvekov/
+      git pull
+      docker-compose -f production.yml up --build --detach
+      docker image prune -f || true
+      EOF
