@@ -54,7 +54,7 @@ deploy:
     - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
     - chmod 700 ~/.ssh
   script:
-    - ssh SERVER_USER@SERVER_HOST
+    - ssh -tt SERVER_USER@SERVER_HOST
     - cd ~/online_cinema/Izvekov/
     - git pull
     - docker-compose production.yml up --build --detach
