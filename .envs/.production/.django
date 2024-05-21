@@ -4,7 +4,9 @@
 DJANGO_SETTINGS_MODULE=config.settings.production
 DJANGO_SECRET_KEY=oOdwyPHI13LUdUuN7aDDBb79uk0lCOKSTVmgJ6QMs4jExJoD7RBND8k0O0ghUGnx
 DJANGO_ADMIN_URL=KjY14Zin56OX1gyC54h1U1191FYloXLe/
+WAGTAIL_ADMIN_URL=KjY14Zin56OX1gyC54h1U1191FYloXWG/
 DJANGO_ALLOWED_HOSTS=izvekov.techhost.wtf
+USE_DOCKER=yes
 
 # Security
 # ------------------------------------------------------------------------------
