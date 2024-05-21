@@ -51,7 +51,7 @@ deploy:
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
     - mkdir -p ~/.ssh
     - eval $(ssh-agent -s)
-    - echo "SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
     - chmod 700 ~/.ssh
   script:
     - ssh SERVER_USER@SERVER_HOST
