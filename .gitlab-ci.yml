@@ -26,6 +26,9 @@ precommit:
 
 pytest:
   stage: tests
+  only:
+    - main
+    - merge_requests
   resource_group: test_group
   image: docker:latest
   services:
@@ -60,7 +63,7 @@ deploy:
   script:
     - ssh -tt $SERVER_USER@$SERVER_HOST "
       cd ~/online_cinema/Izvekov/ &&
-      git pull https://${CI_USERNAME}:${CI_TOKEN}@${CI_PATH} feature/add_docker &&
+      git pull https://${CI_USERNAME}:${CI_TOKEN}@${CI_PATH} &&
       docker-compose -f production.yml up --build --detach &&
       docker image prune -f || true
       "

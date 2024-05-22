@@ -37,6 +37,8 @@ WORKDIR ${APP_HOME}
 RUN addgroup --system django \
     && adduser --system --ingroup django django
 
+# Install ffmpeg
+RUN apt-get update && apt-get install --no-install-recommends -y ffmpeg
 
 # Install required system dependencies
 RUN apt-get update && apt-get install --no-install-recommends -y \
