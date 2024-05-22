@@ -429,6 +429,7 @@ THUMBNAIL_PREFIX = "photos/"
 THUMBNAIL_KVSTORE = "sorl.thumbnail.kvstores.redis_kvstore.KVStore"
 THUMBNAIL_DEGUG = True
 THUMBNAIL_FAST_URL = True
+THUMBNAIL_REDIS_URL = env("REDIS_URL")
 
 # wagtail
 # --------------
