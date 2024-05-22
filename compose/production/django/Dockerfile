@@ -92,6 +92,7 @@ RUN DATABASE_URL="" \
   CELERY_BROKER_URL="" \
   DJANGO_SETTINGS_MODULE="config.settings.production" \
   DJANGO_SECRET_KEY="" \
+  SECRET_KEY="" \
   DJANGO_ADMIN_URL="" \
   WAGTAIL_ADMIN_URL="" \
   REDIS_URL="" \
