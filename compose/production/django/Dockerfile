@@ -91,6 +91,9 @@ USER django
 RUN DATABASE_URL="" \
   CELERY_BROKER_URL="" \
   DJANGO_SETTINGS_MODULE="config.settings.production" \
+  DJANGO_SECRET_KEY="" \
+  DJANGO_ADMIN_URL="" \
+  WAGTAIL_ADMIN_URL="" \
   python manage.py compilemessages
 
 ENTRYPOINT ["/entrypoint"]
