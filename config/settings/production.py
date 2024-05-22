@@ -1,5 +1,5 @@
 # ruff: noqa: E501
-from typing import Any
+import typing
 
 from .base import *  # noqa: F403
 from .base import DATABASES
@@ -89,7 +89,7 @@ INSTALLED_APPS += ["anymail"]
 # https://anymail.readthedocs.io/en/stable/installation/#anymail-settings-reference
 # https://anymail.readthedocs.io/en/stable/esps
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-ANYMAIL = dict[str, Any]
+ANYMAIL = dict[str, typing.Any] = {}
 
 
 # LOGGING
