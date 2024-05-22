@@ -1,5 +1,6 @@
 # ruff: noqa: ERA001, E501
 """Base settings to build other settings files upon."""
+
 from pathlib import Path
 
 import environ
@@ -369,7 +370,7 @@ SPECTACULAR_SETTINGS = {
     "TITLE": "new_some_proj API",
     "DESCRIPTION": "Documentation of API endpoints of new_some_proj",
     "VERSION": "1.0.0",
-    "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAuthenticatedOrReadOnly"],
+    "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
 }
 # Your stuff...
 # ------------------------------------------------------------------------------
@@ -406,7 +407,7 @@ STORAGES = {
         "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
 }
 MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/"
@@ -428,6 +429,7 @@ THUMBNAIL_PREFIX = "photos/"
 THUMBNAIL_KVSTORE = "sorl.thumbnail.kvstores.redis_kvstore.KVStore"
 THUMBNAIL_DEGUG = True
 THUMBNAIL_FAST_URL = True
+THUMBNAIL_REDIS_URL = env("REDIS_URL")
 
 # wagtail
 # --------------
@@ -439,9 +441,8 @@ WAGTAILIMAGES_RASTEROP_MODEL = "blog.CustomRendition"
 
 # cacheops
 # --------------
-# CACHEOPS_REDIS = "redis://localhost:6379/1"
 CACHEOPS_REDIS = {
-    "host": "localhost",
+    "host": "redis",
     "port": 6379,
     "db": 0,
     "socket_timeout": 3,
@@ -455,4 +456,3 @@ CACHEOPS = {
     "media_for_kino_card.*": {"ops": "all", "timeout": 60 * 60},
     "users.*": {"ops": "all", "timeout": 60 * 60},
 }
-# CACHEOPS_DEBUG = True

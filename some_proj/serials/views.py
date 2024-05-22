@@ -1,4 +1,5 @@
 from drf_spectacular.utils import extend_schema
+from rest_framework.serializers import Serializer
 
 from some_proj.films.serializers.shemas_response import ListSerialResponseSerializers
 from some_proj.films.serializers.shemas_response import RetrieveSerialResponseSerializers
@@ -14,7 +15,7 @@ from some_proj.serials.serializers import ListSerialSerializer
 
 @extend_schema(tags=["Serials"])
 class SerialsView(BaseContentView):
-    serializer_mapping = {
+    serializer_mapping: dict[str, dict[str, type[Serializer]]] = {
         "staff": {
             "list": AdminListSerialSerializer,
             "detailed": AdminSerialSerializer,

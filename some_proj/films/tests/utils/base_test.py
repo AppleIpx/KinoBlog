@@ -9,6 +9,9 @@ from some_proj.users.tests.factories import UserFactory
 
 
 class TestBaseFilm(APITestCase):
+    test_film: FilmFactory
+    test_admin: UserFactory
+    test_auth_user: UserFactory
     base_fields = [
         "id",
         "poster",

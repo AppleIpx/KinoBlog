@@ -14,14 +14,15 @@ services:
     depends_on:
       - postgres
       - redis
-      - mailpit
+#      - mailpit
     volumes:
-      - .:/app:z
+      - /app
+    working_dir: /app
     env_file:
       - ./.envs/.local/.django
       - ./.envs/.local/.postgres
     ports:
-      - '8000:8000'
+      - '7654:7654'
     command: /start
 
   postgres:
@@ -52,11 +53,11 @@ services:
       - '9000:9000'
     command: /start-docs
 
-  mailpit:
-    image: docker.io/axllent/mailpit:latest
-    container_name: some_proj_local_mailpit
-    ports:
-      - "8025:8025"
+#  mailpit:
+#    image: docker.io/axllent/mailpit:latest
+#    container_name: some_proj_local_mailpit
+#    ports:
+#      - "8026:8025"
 
   redis:
     image: docker.io/redis:6
@@ -69,7 +70,7 @@ services:
     depends_on:
       - redis
       - postgres
-      - mailpit
+#      - mailpit
     ports: []
     command: /start-celeryworker
 
@@ -80,7 +81,7 @@ services:
     depends_on:
       - redis
       - postgres
-      - mailpit
+#      - mailpit
     ports: []
     command: /start-celerybeat
 

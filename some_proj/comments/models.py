@@ -7,6 +7,7 @@ User = get_user_model()
 
 
 class CommentModel(BaseUserRelation):
+    user: User | None  # type: ignore[valid-type]
     text = models.TextField(
         verbose_name="Комментарий",
     )
@@ -20,4 +21,6 @@ class CommentModel(BaseUserRelation):
         verbose_name_plural = "комментарии"
 
     def __str__(self):
-        return f"Комментарий от {self.user.first_name} в {self.content_object.name}"
+        if self.user is not None and self.user.first_name is not None:
+            return f"Комментарий от {self.user.first_name} в {self.content_object.name}"
+        return "Пользователь не определен"

@@ -9,6 +9,9 @@ from some_proj.users.tests.factories import UserFactory
 
 
 class TestBaseSerial(APITestCase):
+    test_serial: SerialFactory
+    test_admin: UserFactory
+    test_auth_user: UserFactory
     base_fields = [
         "id",
         "poster",

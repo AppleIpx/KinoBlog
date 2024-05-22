@@ -5,6 +5,6 @@ from rest_framework import serializers
 class FavoriteMixin(serializers.Serializer):
     is_favorite = serializers.SerializerMethodField()
 
-    @extend_schema_field(bool)
+    @extend_schema_field(serializers.BooleanField)
     def get_is_favorite(self, obj):
         return obj.is_favorite

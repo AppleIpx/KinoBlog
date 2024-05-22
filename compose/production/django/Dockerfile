@@ -1,6 +1,6 @@
 
 # define an alias for the specific python version used in this file.
-FROM docker.io/python:3.11.8-slim-bookworm as python
+FROM docker.io/python:3.10 as python
 
 # Python build stage
 FROM docker.io/python as python-build-stage
@@ -37,6 +37,8 @@ WORKDIR ${APP_HOME}
 RUN addgroup --system django \
     && adduser --system --ingroup django django
 
+# Install ffmpeg
+RUN apt-get update && apt-get install --no-install-recommends -y ffmpeg
 
 # Install required system dependencies
 RUN apt-get update && apt-get install --no-install-recommends -y \
@@ -86,11 +88,8 @@ COPY --chown=django:django . ${APP_HOME}
 # make django owner of the WORKDIR directory as well.
 RUN chown django:django ${APP_HOME}
 
+
 USER django
 
-RUN DATABASE_URL="" \
-  CELERY_BROKER_URL="" \
-  DJANGO_SETTINGS_MODULE="config.settings.test" \
-  python manage.py compilemessages
 
 ENTRYPOINT ["/entrypoint"]

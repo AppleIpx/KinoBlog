@@ -1,5 +1,5 @@
 # define an alias for the specific python version used in this file.
-FROM docker.io/python:3.11.8-slim-bookworm as python
+FROM docker.io/python:3.10 as python
 
 # Python build stage
 FROM docker.io/python as python-build-stage
@@ -33,6 +33,8 @@ ENV BUILD_ENV ${BUILD_ENVIRONMENT}
 
 WORKDIR ${APP_HOME}
 
+# Install ffmpeg
+RUN apt-get update && apt-get install --no-install-recommends -y ffmpeg
 
 # devcontainer dependencies and utils
 RUN apt-get update && apt-get install --no-install-recommends -y \
@@ -87,5 +89,9 @@ RUN chmod +x /start-flower
 
 # copy application code to WORKDIR
 COPY . ${APP_HOME}
+
+# Copy the video file to the desired location for video encoding tests
+COPY ./compose/local/django/test_video/short_nigth_city.mp4 /app/some_proj/media/videos/test_video/
+
 
 ENTRYPOINT ["/entrypoint"]

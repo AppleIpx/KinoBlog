@@ -38,7 +38,7 @@ class MediaFile(models.Model):
         auto_now_add=True,
         verbose_name="Дата загрузки",
     )
-    urls = models.ManyToManyField(
+    urls = models.ManyToManyField(  # type: ignore[var-annotated]
         "UrlsInMedia",
         verbose_name="Ссылки на видеофайлы",
         related_name="media_urls",
@@ -51,11 +51,14 @@ class MediaFile(models.Model):
         verbose_name_plural = "медии"
 
     def __str__(self):
-        return (
-            f"{self.content_object.name} {self.content_object.season} сезон {self.episode} серия"
-            if hasattr(self.content_object, "season")
-            else self.content_object.name
-        )
+        if self.content_object is None:
+            return "No content"
+
+        content_name = self.content_object.name
+        if hasattr(self.content_object, "season"):
+            season = getattr(self.content_object, "season", "Unknown")
+            return f"{content_name} {season} сезон {self.episode} серия"
+        return content_name
 
 
 class UrlsInMedia(models.Model):

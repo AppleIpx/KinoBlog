@@ -48,8 +48,6 @@ class ListFilmSerializer(
 
 
 class FilmGuestSerializer(FilmsSerializer):
-    is_favorite = None
-
     class Meta(ListFilmSerializer.Meta):
         fields = [
             field
@@ -111,9 +109,6 @@ class DetailedFilmSerializer(
 
 
 class DetailedFilmGuestSerializer(DetailedFilmSerializer, FilmGuestSerializer):
-    is_watched = None
-    is_see_late = None
-
     class Meta(DetailedFilmSerializer.Meta):
         fields = [
             *[

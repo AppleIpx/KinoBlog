@@ -1,6 +1,8 @@
+image: docker:20.10.16
 stages:
   - lint
-#  - tests
+  - tests
+  - deploy
 
 variables:
   POSTGRES_USER: 'some_proj'
@@ -24,15 +26,44 @@ precommit:
 
 pytest:
   stage: tests
-  image: docker/compose:1.29.2
-  tags:
-    - docker
+  only:
+    - main
+    - merge_requests
+  resource_group: test_group
+  image: docker:latest
   services:
     - docker:dind
   before_script:
-    - docker compose -f local.yml build
+    - docker-compose -f test.yml build
     # Ensure celerybeat does not crash due to non-existent tables
-    - docker compose -f local.yml run --rm django python manage.py migrate
-    - docker compose -f local.yml up -d
+    - docker-compose -f test.yml run --rm some-proj-django-test python manage.py migrate
+    - docker-compose -f test.yml up -d
   script:
-    - docker compose -f local.yml run django pytest
+    - docker-compose -f test.yml run --rm some-proj-django-test python manage.py makemigrations
+    - docker-compose -f test.yml run --rm some-proj-django-test mypy .
+    - docker-compose -f test.yml run some-proj-django-test pytest -n auto --create-db
+    - docker-compose -f test.yml down
+    - docker image rm some_proj_postgres_test
+
+deploy:
+  stage: deploy
+  image: docker:latest
+  variables:
+    DOCKER_HOST: "ssh://${SERVER_USER}@${SERVER_HOST}"
+  before_script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - mkdir -p ~/.ssh
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 400 ~/.ssh/id_rsa
+    - ssh-add ~/.ssh/id_rsa
+    - chmod 700 ~/.ssh
+    - ssh-keyscan "$SERVER_HOST" > ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+  script:
+    - ssh -tt $SERVER_USER@$SERVER_HOST "
+      cd ~/online_cinema/Izvekov/ &&
+      git pull https://${CI_USERNAME}:${CI_TOKEN}@${CI_PATH} &&
+      docker-compose -f production.yml up --build --detach &&
+      docker image prune -f || true
+      "

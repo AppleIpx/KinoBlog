@@ -29,6 +29,7 @@
           <option value="Main.*" />
           <option value="foodgram.web_site.management.commands.filling_db.web_site" />
           <option value="some_proj.users.views.user_redirect_view" />
+          <option value="dict.__setitem__" />
         </list>
       </option>
     </inspection_tool>

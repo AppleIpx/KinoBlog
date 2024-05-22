@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 from some_proj.users.managers import UserManager
 
 
-class User(AbstractUser):
+class User(AbstractUser):  # type: ignore[django-manager-missing]
     """
     Default custom user model for new_some_proj.
     If adding fields that need to be filled at user signup,

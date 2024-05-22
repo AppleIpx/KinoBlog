@@ -5,6 +5,6 @@ from rest_framework import serializers
 class DataAddedMixin(serializers.Serializer):
     data_added = serializers.SerializerMethodField()
 
-    @extend_schema_field(str)
+    @extend_schema_field(str)  # type: ignore[arg-type]
     def get_data_added(self, obj):
         return str(obj.data_added) if obj.data_added else ""

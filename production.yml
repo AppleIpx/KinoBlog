@@ -1,4 +1,4 @@
-version: '3'
+version: '3.9'
 
 volumes:
   production_postgres_data: {}

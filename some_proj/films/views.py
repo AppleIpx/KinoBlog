@@ -1,4 +1,5 @@
 from drf_spectacular.utils import extend_schema
+from rest_framework.serializers import Serializer
 
 from some_proj.films.models import FilmModel
 from some_proj.films.serializers.film_serializers import AdminFilmSerializer
@@ -14,7 +15,7 @@ from some_proj.films.utils.base_view import BaseContentView
 
 @extend_schema(tags=["Films"])
 class FilmsView(BaseContentView):
-    serializer_mapping = {
+    serializer_mapping: dict[str, dict[str, type[Serializer]]] = {
         "staff": {
             "list": AdminListFilmSerializer,
             "detailed": AdminFilmSerializer,

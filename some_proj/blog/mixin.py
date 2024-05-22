@@ -31,10 +31,10 @@ class BlogGetApiRepresentationMixin:
     }
 
     def get_api_representation(self, value, context=None):
-        representation = super().get_api_representation(value, context)
-        content_type = self.name
+        representation = super().get_api_representation(value, context)  # type: ignore[misc]
+        content_type = self.name  # type: ignore[attr-defined]
         if content_type_id := representation.get(f"{content_type}"):
-            content_model = self.CONTENT_DATA[content_type]["model"].objects.get(id=content_type_id)
+            content_model = self.CONTENT_DATA[content_type]["model"].objects.get(id=content_type_id)  # type: ignore[attr-defined]
             fields = representation.get(f"{content_type}_fields")
             if fields:
                 content_type_serialized = self.CONTENT_DATA[content_type]["serializer"](content_model).data

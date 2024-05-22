@@ -1,0 +1,24 @@
+# General
+# ------------------------------------------------------------------------------
+USE_DOCKER=yes
+IPYTHONDIR=/app/.ipython
+DATABASE_URL=postgres://postgres:1234@some_proj_postgres_test:5432/all_online
+DJANGO_SETTINGS_MODULE=config.settings.local
+IPYTHONDIR=/app/.ipython
+
+# Celery
+# ------------------------------------------------------------------------------
+CELERY_BROKER_URL=redis://some_proj_redis_test:6379/0
+
+# Redis
+# ------------------------------------------------------------------------------
+REDIS_URL=redis://some_proj_redis_test:6379/0
+
+# AWS
+# ------------------------------------------------------------------------------
+AWS_ACCESS_KEY_ID=intern-24-izvekov
+AWS_SECRET_ACCESS_KEY=PiJkvnvnvvBRKwM7Uz86UFy
+AWS_S3_ENDPOINT_URL=https://minio.space.rdclr.ru
+AWS_S3_MAX_MEMORY_SIZE=100_000_000_000_000
+AWS_S3_REGION_NAME=eu-west-2
+AWS_STORAGE_BUCKET_NAME=intern-24-izvekov
