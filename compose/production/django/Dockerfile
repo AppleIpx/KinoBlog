@@ -94,6 +94,7 @@ RUN DATABASE_URL="" \
   DJANGO_SECRET_KEY="" \
   DJANGO_ADMIN_URL="" \
   WAGTAIL_ADMIN_URL="" \
+  REDIS_URL="" \
   python manage.py compilemessages
 
 ENTRYPOINT ["/entrypoint"]
