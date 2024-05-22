@@ -88,16 +88,5 @@ RUN chown django:django ${APP_HOME}
 
 USER django
 
-RUN DATABASE_URL="" \
-  CELERY_BROKER_URL="" \
-  DJANGO_SETTINGS_MODULE="config.settings.production" \
-  DJANGO_SECRET_KEY="" \
-  SECRET_KEY="" \
-  DJANGO_ADMIN_URL="" \
-  WAGTAIL_ADMIN_URL="" \
-  REDIS_URL="" \
-  AWS_ACCESS_KEY_ID="" \
-  AWS_SECRET_ACCESS_KEY="" \
-  python manage.py compilemessages
 
 ENTRYPOINT ["/entrypoint"]
