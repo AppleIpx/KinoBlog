@@ -95,6 +95,8 @@ RUN DATABASE_URL="" \
   DJANGO_ADMIN_URL="" \
   WAGTAIL_ADMIN_URL="" \
   REDIS_URL="" \
+  AWS_ACCESS_KEY_ID="" \
+  AWS_SECRET_ACCESS_KEY="" \
   python manage.py compilemessages
 
 ENTRYPOINT ["/entrypoint"]
