@@ -113,6 +113,7 @@ LOCAL_APPS = [
     "some_proj.media_for_kino_card",
     "some_proj.serials",
     "some_proj.blog",
+    "some_proj.core_management",
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -412,6 +413,21 @@ STORAGES = {
 }
 MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/"
 
+# STATIC
+ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
+# ------------------------------------------------------------------------------
+# https://docs.djangoproject.com/en/dev/ref/settings/#static-root
+STATIC_ROOT = str(ROOT_DIR / "static")
+# https://docs.djangoproject.com/en/dev/ref/settings/#static-url
+STATIC_URL = "/static/"
+
+# MEDIA
+# ------------------------------------------------------------------------------
+# https://docs.djangoproject.com/en/dev/ref/settings/#media-root
+MEDIA_ROOT = str(APPS_DIR / "media")
+# https://docs.djangoproject.com/en/dev/ref/settings/#media-url
+MEDIA_URL = "media/"
+
 
 # sink
 # --------------
@@ -437,12 +453,12 @@ WAGTAIL_SITE_NAME = "blogging"
 WAGTAILADMIN_BASE_URL = "https://blogging"
 WAGTAIL_ENABLE_UPDATE_CHECK = False
 WAGTAILIMAGES_IMAGE_MODEL = "blog.CustomImage"
-WAGTAILIMAGES_RASTEROP_MODEL = "blog.CustomRendition"
+# WAGTAILIMAGES_RASTEROP_MODEL = "blog.CustomRendition"
 
 # cacheops
 # --------------
 CACHEOPS_REDIS = {
-    "host": "redis",
+    "host": "localhost",
     "port": 6379,
     "db": 0,
     "socket_timeout": 3,

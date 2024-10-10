@@ -35,9 +35,9 @@ class UserAdmin(auth_admin.UserAdmin):
                 ),
             },
         ),
-        (_("Important dates"), {"fields": ("last_login", "date_joined")}),
+        (_("Important dates"), {"fields": ("created_at", "last_login")}),
     )
-    list_display = ["email", "name", "is_superuser"]
+    list_display = ["email", "created_at", "last_login"]
     search_fields = ["name"]
     ordering = ["id"]
     add_fieldsets = (
@@ -45,7 +45,7 @@ class UserAdmin(auth_admin.UserAdmin):
             None,
             {
                 "classes": ("wide",),
-                "fields": ("email", "password1", "password2"),
+                "fields": ("email", "password1", "password2", "created_at"),
             },
         ),
     )

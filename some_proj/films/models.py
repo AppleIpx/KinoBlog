@@ -91,6 +91,9 @@ class GenreModel(models.Model):
         verbose_name="Название жанра",
         max_length=256,
     )
+    data_added = models.DateField(
+        verbose_name="Дата добавления",
+    )
 
     class Meta:
         verbose_name = "жанр"
